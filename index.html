@@ -5,236 +5,932 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Péče o dítě</title>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      background: #f3f3f3;
       color: #222;
     }
 
-    .container {
+    .app {
       max-width: 600px;
       margin: auto;
-      padding: 24px 18px 50px;
+      min-height: 100vh;
+      padding: 22px 18px 60px;
     }
 
     h1 {
-      font-size: 38px;
-      margin-bottom: 5px;
+      font-size: 40px;
+      margin: 0 0 4px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 27px;
     }
 
     .subtitle {
       color: #777;
-      font-size: 21px;
-      margin-bottom: 28px;
+      font-size: 20px;
+      margin-bottom: 25px;
     }
 
     .card {
       background: white;
       border-radius: 22px;
-      padding: 25px;
-      margin-bottom: 22px;
-    }
-
-    h2 {
-      font-size: 29px;
-      margin-top: 0;
+      padding: 22px;
+      margin-bottom: 20px;
     }
 
     button {
       width: 100%;
+      padding: 15px;
       border: 0;
-      border-radius: 15px;
-      padding: 18px;
-      font-size: 20px;
-      background: #222;
-      color: white;
+      border-radius: 13px;
+      font-size: 17px;
+      margin-top: 10px;
       cursor: pointer;
     }
 
-    button:active {
-      transform: scale(0.98);
+    .primary {
+      background: #222;
+      color: white;
     }
 
-    .person {
-      padding: 10px 0;
-      font-size: 20px;
+    .secondary {
+      background: #ececec;
+      color: #222;
     }
 
-    #records {
-      margin-bottom: 20px;
+    .delete {
+      background: #f7dddd;
+      color: #9d0000;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 11px;
+      font-size: 16px;
+      margin: 6px 0 14px;
+      background: white;
+    }
+
+    textarea {
+      min-height: 85px;
+      resize: vertical;
+    }
+
+    label {
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     .record {
-      background: #f3f3f3;
-      padding: 13px;
-      border-radius: 12px;
-      margin-bottom: 10px;
-    }
-
-    .form {
-      display: none;
-      margin-top: 20px;
-    }
-
-    select,
-    input,
-    textarea {
-      width: 100%;
+      background: #f4f4f4;
+      border-radius: 14px;
       padding: 14px;
-      margin-bottom: 12px;
-      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .record:active {
+      transform: scale(.99);
+    }
+
+    .person-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .person-row:last-child {
+      border-bottom: 0;
+    }
+
+    .dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      flex: 0 0 15px;
+    }
+
+    .small {
+      color: #777;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .message {
+      background: #eee;
       border-radius: 10px;
-      font-size: 17px;
-      font-family: Arial, sans-serif;
+      padding: 10px;
+      margin-top: 10px;
     }
 
-    textarea {
-      min-height: 90px;
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 100;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
     }
 
-    .save {
-      background: #222;
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 600px;
+      max-height: 92vh;
+      overflow-y: auto;
+      border-radius: 24px 24px 0 0;
+      padding: 22px;
     }
   </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="app">
 
   <h1>Péče o dítě</h1>
   <div class="subtitle">Rodinný přehled</div>
 
-  <div class="card">
+  <!-- PŘIHLÁŠENÍ -->
+  <div id="loginCard" class="card">
+    <h2>Přihlášení</h2>
 
-    <h2>Dnes</h2>
+    <label>E-mail</label>
+    <input id="email" type="email">
 
-    <div id="records">
-      Zatím tu nejsou žádné záznamy.
-    </div>
+    <label>Heslo</label>
+    <input id="password" type="password">
 
-    <button id="addButton" type="button">
-      + Přidat péči
-    </button>
+    <button class="primary" onclick="login()">Přihlásit</button>
 
-    <div class="form" id="careForm">
+    <div id="loginMessage"></div>
+  </div>
 
-      <select id="person">
-        <option value="">Kdo pečoval?</option>
-        <option>Máma</option>
-        <option>Táta</option>
-        <option>Babička Bezděz</option>
-        <option>Babička Jablonec</option>
-        <option>Teta 1</option>
-        <option>Teta 2</option>
-      </select>
 
-      <input
-        id="date"
-        type="date"
-      >
+  <!-- HLAVNÍ APP -->
+  <div id="mainApp" class="hidden">
 
-      <input
-        id="from"
-        type="time"
-      >
+    <div class="card">
 
-      <input
-        id="to"
-        type="time"
-      >
+      <h2>Dnes</h2>
+      <div id="todayDate" class="small"></div>
 
-      <textarea
-        id="note"
-        placeholder="Poznámka"
-      ></textarea>
+      <div id="todayRecords" style="margin-top:15px;">
+        Načítám…
+      </div>
 
-      <button
-        id="saveButton"
-        class="save"
-        type="button"
-      >
-        Uložit
+      <button class="primary" onclick="openNewCare()">
+        + Přidat péči
       </button>
 
     </div>
 
-  </div>
 
-  <div class="card">
+    <div class="card">
 
-    <h2>Osoby</h2>
+      <h2>Osoby</h2>
 
-    <div class="person">Máma</div>
-    <div class="person">Táta</div>
-    <div class="person">Babička Bezděz</div>
-    <div class="person">Babička Jablonec</div>
-    <div class="person">Teta 1</div>
-    <div class="person">Teta 2</div>
+      <div id="peopleList"></div>
+
+      <button class="secondary" onclick="openPersonModal()">
+        + Přidat osobu
+      </button>
+
+    </div>
+
+
+    <div class="card">
+      <button class="secondary" onclick="logout()">
+        Odhlásit
+      </button>
+    </div>
 
   </div>
 
 </div>
 
+
+<!-- PÉČE -->
+<div id="careModal" class="modal">
+
+  <div class="modal-box">
+
+    <h2 id="careTitle">Přidat péči</h2>
+
+    <label>Kdo pečoval</label>
+    <select id="carePerson"></select>
+
+    <label>Od</label>
+    <input id="careStart" type="datetime-local">
+
+    <label>Do</label>
+    <input id="careEnd" type="datetime-local">
+
+    <label>Typ záznamu</label>
+    <select id="careType">
+      <option value="actual">Skutečnost</option>
+      <option value="planned">Plán</option>
+    </select>
+
+    <label>Poznámka</label>
+    <textarea id="careNote"
+      placeholder="Např. přivezl dříve, změna domluvy…"></textarea>
+
+    <button class="primary" onclick="saveCare()">
+      Uložit
+    </button>
+
+    <button id="deleteCareButton"
+      class="delete hidden"
+      onclick="deleteCare()">
+      Smazat záznam
+    </button>
+
+    <button class="secondary" onclick="closeCareModal()">
+      Zrušit
+    </button>
+
+    <div id="careMessage"></div>
+
+  </div>
+
+</div>
+
+
+<!-- OSOBA -->
+<div id="personModal" class="modal">
+
+  <div class="modal-box">
+
+    <h2>Přidat osobu</h2>
+
+    <label>Název</label>
+    <input id="personName"
+      placeholder="Máma, Táta, Babička Bezděz…">
+
+    <label>Barva</label>
+    <input id="personColor"
+      type="color"
+      value="#e85d75">
+
+    <button class="primary" onclick="savePerson()">
+      Uložit
+    </button>
+
+    <button class="secondary" onclick="closePersonModal()">
+      Zrušit
+    </button>
+
+    <div id="personMessage"></div>
+
+  </div>
+
+</div>
+
+
 <script>
 
-  const addButton = document.getElementById("addButton");
-  const careForm = document.getElementById("careForm");
-  const saveButton = document.getElementById("saveButton");
+/* =========================================
+   SUPABASE
+========================================= */
 
-  addButton.addEventListener("click", function () {
-    careForm.style.display = "block";
-    addButton.style.display = "none";
+const SUPABASE_URL =
+  "https://xfuhiajigonazdrzzlvm.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_drYLPns62-EE8-Mtz9WS8w_z7Vm6YFd";
+
+const db = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let currentUser = null;
+let people = [];
+let editingCareId = null;
+
+
+/* =========================================
+   START
+========================================= */
+
+async function startApp() {
+
+  document.getElementById("todayDate").textContent =
+    new Date().toLocaleDateString(
+      "cs-CZ",
+      {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      }
+    );
+
+  const {
+    data: { session }
+  } = await db.auth.getSession();
+
+  if (session) {
+    currentUser = session.user;
+    await showApp();
+  }
+}
+
+startApp();
+
+
+/* =========================================
+   PŘIHLÁŠENÍ
+========================================= */
+
+async function login() {
+
+  const email =
+    document.getElementById("email").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+  const msg =
+    document.getElementById("loginMessage");
+
+  msg.innerHTML = "Přihlašuji…";
+
+  const { data, error } =
+    await db.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if (error) {
+    msg.innerHTML =
+      `<div class="message">Chyba: ${error.message}</div>`;
+    return;
+  }
+
+  currentUser = data.user;
+
+  msg.innerHTML = "";
+
+  await showApp();
+}
+
+
+async function logout() {
+
+  await db.auth.signOut();
+
+  currentUser = null;
+
+  document.getElementById("mainApp")
+    .classList.add("hidden");
+
+  document.getElementById("loginCard")
+    .classList.remove("hidden");
+}
+
+
+async function showApp() {
+
+  document.getElementById("loginCard")
+    .classList.add("hidden");
+
+  document.getElementById("mainApp")
+    .classList.remove("hidden");
+
+  await loadPeople();
+  await loadToday();
+}
+
+
+/* =========================================
+   OSOBY
+========================================= */
+
+function openPersonModal() {
+
+  document.getElementById("personName").value = "";
+
+  document.getElementById("personMessage").innerHTML = "";
+
+  document.getElementById("personModal")
+    .classList.add("open");
+}
+
+
+function closePersonModal() {
+
+  document.getElementById("personModal")
+    .classList.remove("open");
+}
+
+
+async function savePerson() {
+
+  const name =
+    document.getElementById("personName").value.trim();
+
+  const color =
+    document.getElementById("personColor").value;
+
+  const msg =
+    document.getElementById("personMessage");
+
+  if (!name) {
+    msg.innerHTML =
+      `<div class="message">Napiš název osoby.</div>`;
+    return;
+  }
+
+  const { error } =
+    await db
+      .from("people")
+      .insert({
+        user_id: currentUser.id,
+        name: name,
+        color: color
+      });
+
+  if (error) {
+    msg.innerHTML =
+      `<div class="message">Chyba: ${error.message}</div>`;
+    return;
+  }
+
+  closePersonModal();
+
+  await loadPeople();
+}
+
+
+async function loadPeople() {
+
+  const { data, error } =
+    await db
+      .from("people")
+      .select("*")
+      .order("created_at");
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  people = data || [];
+
+  const list =
+    document.getElementById("peopleList");
+
+  const select =
+    document.getElementById("carePerson");
+
+  list.innerHTML = "";
+  select.innerHTML = "";
+
+  if (!people.length) {
+
+    list.innerHTML =
+      `<div class="small">
+        Zatím nejsou přidané žádné osoby.
+      </div>`;
+
+    return;
+  }
+
+  people.forEach(person => {
+
+    const row =
+      document.createElement("div");
+
+    row.className = "person-row";
+
+    const dot =
+      document.createElement("span");
+
+    dot.className = "dot";
+    dot.style.background = person.color;
+
+    const text =
+      document.createElement("span");
+
+    text.textContent = person.name;
+
+    row.appendChild(dot);
+    row.appendChild(text);
+
+    list.appendChild(row);
+
+
+    const option =
+      document.createElement("option");
+
+    option.value = person.id;
+    option.textContent = person.name;
+
+    select.appendChild(option);
   });
+}
 
-  saveButton.addEventListener("click", function () {
 
-    const person = document.getElementById("person").value;
-    const date = document.getElementById("date").value;
-    const from = document.getElementById("from").value;
-    const to = document.getElementById("to").value;
-    const note = document.getElementById("note").value;
+/* =========================================
+   NOVÁ PÉČE
+========================================= */
 
-    if (!person) {
-      alert("Vyber, kdo pečoval.");
-      return;
+function openNewCare() {
+
+  if (!people.length) {
+    alert("Nejdřív přidej alespoň jednu osobu.");
+    return;
+  }
+
+  editingCareId = null;
+
+  document.getElementById("careTitle").textContent =
+    "Přidat péči";
+
+  document.getElementById("deleteCareButton")
+    .classList.add("hidden");
+
+  document.getElementById("careNote").value = "";
+
+  document.getElementById("careType").value = "actual";
+
+  const now = new Date();
+
+  const later =
+    new Date(now.getTime() + 2 * 60 * 60 * 1000);
+
+  document.getElementById("careStart").value =
+    localDateTime(now);
+
+  document.getElementById("careEnd").value =
+    localDateTime(later);
+
+  document.getElementById("careMessage").innerHTML = "";
+
+  document.getElementById("careModal")
+    .classList.add("open");
+}
+
+
+function closeCareModal() {
+
+  document.getElementById("careModal")
+    .classList.remove("open");
+}
+
+
+/* =========================================
+   ULOŽENÍ / ÚPRAVA
+========================================= */
+
+async function saveCare() {
+
+  const personId =
+    document.getElementById("carePerson").value;
+
+  const start =
+    document.getElementById("careStart").value;
+
+  const end =
+    document.getElementById("careEnd").value;
+
+  const type =
+    document.getElementById("careType").value;
+
+  const note =
+    document.getElementById("careNote").value.trim();
+
+  const msg =
+    document.getElementById("careMessage");
+
+  if (!personId || !start || !end) {
+
+    msg.innerHTML =
+      `<div class="message">
+        Vyplň osobu, začátek i konec.
+      </div>`;
+
+    return;
+  }
+
+  if (new Date(end) <= new Date(start)) {
+
+    msg.innerHTML =
+      `<div class="message">
+        Čas „Do“ musí být později než „Od“.
+      </div>`;
+
+    return;
+  }
+
+  const values = {
+    user_id: currentUser.id,
+    person_id: personId,
+    start_at: new Date(start).toISOString(),
+    end_at: new Date(end).toISOString(),
+    record_type: type,
+    note: note || null
+  };
+
+  let error;
+
+  if (editingCareId) {
+
+    const result =
+      await db
+        .from("care_periods")
+        .update(values)
+        .eq("id", editingCareId);
+
+    error = result.error;
+
+  } else {
+
+    const result =
+      await db
+        .from("care_periods")
+        .insert(values);
+
+    error = result.error;
+  }
+
+  if (error) {
+
+    msg.innerHTML =
+      `<div class="message">
+        Chyba: ${error.message}
+      </div>`;
+
+    return;
+  }
+
+  closeCareModal();
+
+  await loadToday();
+}
+
+
+/* =========================================
+   NAČTENÍ DNEŠNÍ PÉČE
+========================================= */
+
+async function loadToday() {
+
+  const start = new Date();
+  start.setHours(0,0,0,0);
+
+  const end = new Date();
+  end.setHours(23,59,59,999);
+
+  const { data, error } =
+    await db
+      .from("care_periods")
+      .select(`
+        *,
+        people (
+          name,
+          color
+        )
+      `)
+      .lte("start_at", end.toISOString())
+      .gte("end_at", start.toISOString())
+      .order("start_at");
+
+  const box =
+    document.getElementById("todayRecords");
+
+  if (error) {
+
+    box.innerHTML =
+      `<div class="message">
+        Chyba při načítání: ${error.message}
+      </div>`;
+
+    return;
+  }
+
+  if (!data || !data.length) {
+
+    box.innerHTML =
+      `<div class="small">
+        Zatím tu nejsou žádné záznamy.
+      </div>`;
+
+    return;
+  }
+
+  box.innerHTML = "";
+
+  data.forEach(item => {
+
+    const row =
+      document.createElement("div");
+
+    row.className = "record";
+
+    row.onclick = () => editCare(item);
+
+
+    const nameLine =
+      document.createElement("div");
+
+    nameLine.style.display = "flex";
+    nameLine.style.alignItems = "center";
+    nameLine.style.gap = "8px";
+
+
+    const dot =
+      document.createElement("span");
+
+    dot.className = "dot";
+
+    dot.style.background =
+      item.people?.color || "#999";
+
+
+    const strong =
+      document.createElement("strong");
+
+    strong.textContent =
+      item.people?.name || "Osoba";
+
+
+    nameLine.appendChild(dot);
+    nameLine.appendChild(strong);
+
+    row.appendChild(nameLine);
+
+
+    const time =
+      document.createElement("div");
+
+    time.style.marginTop = "7px";
+
+    time.textContent =
+      formatDateTime(item.start_at)
+      + " – "
+      + formatDateTime(item.end_at);
+
+    row.appendChild(time);
+
+
+    const type =
+      document.createElement("div");
+
+    type.className = "small";
+
+    type.textContent =
+      item.record_type === "planned"
+        ? "Plán"
+        : "Skutečnost";
+
+    row.appendChild(type);
+
+
+    if (item.note) {
+
+      const note =
+        document.createElement("div");
+
+      note.className = "small";
+
+      note.textContent = item.note;
+
+      row.appendChild(note);
     }
 
-    const records = document.getElementById("records");
-
-    if (records.innerText.includes("Zatím tu nejsou")) {
-      records.innerHTML = "";
-    }
-
-    const record = document.createElement("div");
-    record.className = "record";
-
-    record.innerHTML =
-      "<strong>" + person + "</strong><br>" +
-      (date ? date + "<br>" : "") +
-      (from || to ? (from || "—") + " – " + (to || "—") + "<br>" : "") +
-      (note ? note : "");
-
-    records.appendChild(record);
-
-    careForm.style.display = "none";
-    addButton.style.display = "block";
-
-    document.getElementById("person").value = "";
-    document.getElementById("from").value = "";
-    document.getElementById("to").value = "";
-    document.getElementById("note").value = "";
-
+    box.appendChild(row);
   });
+}
 
-  document.getElementById("date").value =
-    new Date().toISOString().split("T")[0];
+
+/* =========================================
+   ÚPRAVA ZÁZNAMU
+========================================= */
+
+function editCare(item) {
+
+  editingCareId = item.id;
+
+  document.getElementById("careTitle").textContent =
+    "Upravit péči";
+
+  document.getElementById("carePerson").value =
+    item.person_id;
+
+  document.getElementById("careStart").value =
+    localDateTime(new Date(item.start_at));
+
+  document.getElementById("careEnd").value =
+    localDateTime(new Date(item.end_at));
+
+  document.getElementById("careType").value =
+    item.record_type;
+
+  document.getElementById("careNote").value =
+    item.note || "";
+
+  document.getElementById("deleteCareButton")
+    .classList.remove("hidden");
+
+  document.getElementById("careMessage").innerHTML = "";
+
+  document.getElementById("careModal")
+    .classList.add("open");
+}
+
+
+/* =========================================
+   SMAZÁNÍ
+========================================= */
+
+async function deleteCare() {
+
+  if (!editingCareId) return;
+
+  if (!confirm("Opravdu chceš tento záznam smazat?")) {
+    return;
+  }
+
+  const { error } =
+    await db
+      .from("care_periods")
+      .delete()
+      .eq("id", editingCareId);
+
+  if (error) {
+
+    document.getElementById("careMessage").innerHTML =
+      `<div class="message">
+        Chyba: ${error.message}
+      </div>`;
+
+    return;
+  }
+
+  closeCareModal();
+
+  editingCareId = null;
+
+  await loadToday();
+}
+
+
+/* =========================================
+   POMOCNÉ FUNKCE
+========================================= */
+
+function localDateTime(date) {
+
+  const pad =
+    n => String(n).padStart(2, "0");
+
+  return (
+    date.getFullYear() + "-" +
+    pad(date.getMonth() + 1) + "-" +
+    pad(date.getDate()) + "T" +
+    pad(date.getHours()) + ":" +
+    pad(date.getMinutes())
+  );
+}
+
+
+function formatDateTime(value) {
+
+  return new Date(value).toLocaleString(
+    "cs-CZ",
+    {
+      day: "2-digit",
+      month: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    }
+  );
+}
 
 </script>
 
