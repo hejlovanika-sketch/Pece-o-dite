@@ -2,148 +2,278 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Péče o dítě</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>Davídkův kalendář</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    * { box-sizing: border-box; }
+    :root {
+      --bg: #f4f4f4;
+      --card: #ffffff;
+      --text: #202020;
+      --muted: #7a7a7a;
+      --line: #e8e8e8;
+      --soft: #f6f6f6;
+      --dark: #242424;
+      --danger-bg: #fae9e9;
+      --danger: #a60000;
+    }
 
-    body {
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f3f3;
-      color: #222;
+      min-height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
     }
 
-    .app {
-      max-width: 600px;
-      margin: auto;
-      min-height: 100vh;
-      padding: 22px 18px 60px;
-    }
-
-    h1 {
-      font-size: 40px;
-      margin: 0 0 4px;
-    }
-
-    h2 {
-      margin-top: 0;
-      font-size: 27px;
-    }
-
-    .subtitle {
-      color: #777;
-      font-size: 20px;
-      margin-bottom: 25px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 22px;
-      padding: 22px;
-      margin-bottom: 20px;
+    button, input, select, textarea {
+      font: inherit;
     }
 
     button {
-      width: 100%;
-      padding: 15px;
-      border: 0;
-      border-radius: 13px;
-      font-size: 17px;
-      margin-top: 10px;
       cursor: pointer;
     }
 
-    .primary {
+    .app {
+      max-width: 620px;
+      margin: auto;
+      min-height: 100vh;
+      background: #fff;
+      padding-bottom: 88px;
+    }
+
+    .header {
+      padding: 22px 18px 8px;
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .app-title {
+      font-size: 29px;
+      font-weight: 750;
+      margin: 0;
+    }
+
+    .month-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 18px;
+      gap: 10px;
+    }
+
+    .month-title {
+      font-size: 21px;
+      font-weight: 700;
+      text-align: center;
+      flex: 1;
+      text-transform: capitalize;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 0;
+      background: var(--soft);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .today-btn {
+      border: 0;
+      background: transparent;
+      padding: 5px 2px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #555;
+    }
+
+    .calendar-wrap {
+      padding: 6px 8px 18px;
+    }
+
+    .weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      padding: 6px 0;
+      font-weight: 700;
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      border-left: 1px solid var(--line);
+      border-top: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .day {
+      position: relative;
+      min-height: 82px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 6px 4px 11px;
+      overflow: hidden;
+      background: #fff;
+      user-select: none;
+    }
+
+    .day.other-month {
+      background: #fafafa;
+      color: #bcbcbc;
+    }
+
+    .day.today .day-number {
       background: #222;
       color: white;
     }
 
-    .secondary {
-      background: #ececec;
-      color: #222;
-    }
-
-    .delete {
-      background: #f7dddd;
-      color: #9d0000;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #ccc;
-      border-radius: 11px;
-      font-size: 16px;
-      margin: 6px 0 14px;
-      background: white;
-    }
-
-    textarea {
-      min-height: 85px;
-      resize: vertical;
-    }
-
-    label {
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .record {
-      background: #f4f4f4;
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 10px;
-      cursor: pointer;
-    }
-
-    .record:active {
-      transform: scale(.99);
-    }
-
-    .person-row {
+    .day-number {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 11px 0;
-      border-bottom: 1px solid #eee;
-    }
-
-    .person-row:last-child {
-      border-bottom: 0;
-    }
-
-    .dot {
-      width: 15px;
-      height: 15px;
-      border-radius: 50%;
-      flex: 0 0 15px;
-    }
-
-    .small {
-      color: #777;
+      justify-content: center;
       font-size: 13px;
-      margin-top: 5px;
+      font-weight: 700;
     }
 
-    .message {
-      background: #eee;
-      border-radius: 10px;
-      padding: 10px;
-      margin-top: 10px;
+    .day-icons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+      margin-top: 5px;
+      align-items: center;
+    }
+
+    .day-icons svg {
+      width: 13px;
+      height: 13px;
+      stroke-width: 1.8;
+      color: #303030;
+    }
+
+    .more-icons {
+      font-size: 10px;
+      color: #777;
+      margin-left: 1px;
+    }
+
+    .care-track {
+      position: absolute;
+      height: 7px;
+      left: 3px;
+      right: 3px;
+      bottom: 3px;
+      border-radius: 5px;
+      background: #f0f0f0;
+      overflow: hidden;
+    }
+
+    .care-segment {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      min-width: 2px;
+    }
+
+    .planned-segment {
+      opacity: .4;
+      background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255,255,255,.8),
+        rgba(255,255,255,.8) 2px,
+        transparent 2px,
+        transparent 4px
+      );
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .content {
+      padding: 14px 16px 25px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      padding: 17px;
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 750;
+      margin: 0 0 12px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 0;
+      width: min(620px, 100%);
+      min-height: 70px;
+      padding: 7px 8px max(7px, env(safe-area-inset-bottom));
+      background: rgba(255,255,255,.96);
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      z-index: 60;
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-btn {
+      border: 0;
+      background: transparent;
+      color: #888;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 650;
+      padding: 4px;
+    }
+
+    .nav-btn.active {
+      color: #111;
+    }
+
+    .nav-btn svg {
+      width: 22px;
+      height: 22px;
     }
 
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.45);
+      background: rgba(0,0,0,.42);
       z-index: 100;
       display: none;
       align-items: flex-end;
@@ -155,13 +285,328 @@
     }
 
     .modal-box {
-      background: white;
-      width: 100%;
-      max-width: 600px;
+      width: min(620px, 100%);
       max-height: 92vh;
       overflow-y: auto;
+      background: #fff;
       border-radius: 24px 24px 0 0;
-      padding: 22px;
+      padding: 10px 18px 28px;
+      box-shadow: 0 -10px 30px rgba(0,0,0,.12);
+    }
+
+    .modal-grip {
+      width: 44px;
+      height: 5px;
+      background: #ddd;
+      border-radius: 10px;
+      margin: 3px auto 15px;
+    }
+
+    .modal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 23px;
+      font-weight: 750;
+      margin: 0;
+      text-transform: capitalize;
+    }
+
+    .close-btn {
+      border: 0;
+      background: var(--soft);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .day-event {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .day-event:last-child {
+      border-bottom: 0;
+    }
+
+    .event-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: #f3f3f3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 35px;
+    }
+
+    .event-icon svg {
+      width: 19px;
+      height: 19px;
+      color: #222;
+    }
+
+    .event-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .event-name {
+      font-weight: 750;
+      font-size: 16px;
+    }
+
+    .event-meta {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 4px;
+      line-height: 1.35;
+    }
+
+    .empty {
+      color: #999;
+      font-size: 14px;
+      padding: 10px 0;
+    }
+
+    .day-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 13px;
+      padding: 13px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .btn-dark {
+      background: #222;
+      color: white;
+    }
+
+    .btn-soft {
+      background: #f1f1f1;
+      color: #222;
+    }
+
+    .btn-danger {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .three-lines-wrap {
+      margin-top: 14px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .three-lines {
+      border: 0;
+      background: transparent;
+      width: 50px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+    }
+
+    .three-lines svg {
+      width: 27px;
+      height: 27px;
+    }
+
+    .care-details {
+      display: none;
+      margin-top: 8px;
+    }
+
+    .care-details.open {
+      display: block;
+    }
+
+    .care-row {
+      border-left: 5px solid #bbb;
+      background: #f7f7f7;
+      border-radius: 10px;
+      padding: 10px 11px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .care-person {
+      font-weight: 750;
+    }
+
+    .care-meta {
+      color: #666;
+      font-size: 13px;
+      margin-top: 3px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 750;
+      margin-bottom: 5px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid #d6d6d6;
+      border-radius: 11px;
+      padding: 12px;
+      margin-bottom: 14px;
+      background: white;
+      color: #222;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .person-chip-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .person-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .person-dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      flex: 0 0 15px;
+    }
+
+    .overview-tabs {
+      display: flex;
+      gap: 6px;
+      padding: 0 0 15px;
+    }
+
+    .overview-tab {
+      flex: 1;
+      padding: 10px 5px;
+      border: 0;
+      border-radius: 10px;
+      background: #efefef;
+      color: #666;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .overview-tab.active {
+      background: #222;
+      color: white;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .stat-row:last-child {
+      border-bottom: 0;
+    }
+
+    .stat-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 650;
+    }
+
+    .stat-value {
+      font-weight: 750;
+    }
+
+    .activity-stat {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .activity-stat svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    .login-wrap {
+      padding: 50px 18px;
+    }
+
+    .login-card {
+      max-width: 430px;
+      margin: auto;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: #fff;
+    }
+
+    .login-title {
+      font-size: 27px;
+      margin: 0 0 20px;
+    }
+
+    .message {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      background: #f1f1f1;
+      font-size: 14px;
+    }
+
+    .settings-title {
+      margin: 2px 0 18px;
+      font-size: 25px;
+    }
+
+    @media (max-width: 390px) {
+      .day {
+        min-height: 75px;
+        padding-left: 3px;
+        padding-right: 3px;
+      }
+
+      .day-icons svg {
+        width: 12px;
+        height: 12px;
+      }
     }
   </style>
 </head>
@@ -170,76 +615,299 @@
 
 <div class="app">
 
-  <h1>Péče o dítě</h1>
-  <div class="subtitle">Rodinný přehled</div>
-
   <!-- PŘIHLÁŠENÍ -->
-  <div id="loginCard" class="card">
-    <h2>Přihlášení</h2>
+  <div id="loginScreen" class="login-wrap">
+    <div class="login-card">
+      <h1 class="login-title">Davídkův kalendář</h1>
 
-    <label>E-mail</label>
-    <input id="email" type="email">
+      <label>E-mail</label>
+      <input id="loginEmail" type="email">
 
-    <label>Heslo</label>
-    <input id="password" type="password">
+      <label>Heslo</label>
+      <input id="loginPassword" type="password">
 
-    <button class="primary" onclick="login()">Přihlásit</button>
+      <button class="btn btn-dark" style="width:100%" onclick="login()">
+        Přihlásit
+      </button>
 
-    <div id="loginMessage"></div>
+      <div id="loginMessage"></div>
+    </div>
   </div>
 
-
-  <!-- HLAVNÍ APP -->
+  <!-- APP -->
   <div id="mainApp" class="hidden">
 
-    <div class="card">
+    <!-- KALENDÁŘ -->
+    <section id="calendarScreen" class="screen active">
 
-      <h2>Dnes</h2>
-      <div id="todayDate" class="small"></div>
+      <div class="header">
+        <h1 class="app-title">Davídkův kalendář</h1>
 
-      <div id="todayRecords" style="margin-top:15px;">
-        Načítám…
+        <div class="month-header">
+          <button class="icon-btn" onclick="changeMonth(-1)">
+            <i data-lucide="chevron-left"></i>
+          </button>
+
+          <div>
+            <div id="monthTitle" class="month-title"></div>
+            <button class="today-btn" onclick="goToday()">Dnes</button>
+          </div>
+
+          <button class="icon-btn" onclick="changeMonth(1)">
+            <i data-lucide="chevron-right"></i>
+          </button>
+        </div>
       </div>
 
-      <button class="primary" onclick="openNewCare()">
-        + Přidat péči
+      <div class="calendar-wrap">
+
+        <div class="weekdays">
+          <div>Po</div>
+          <div>Út</div>
+          <div>St</div>
+          <div>Čt</div>
+          <div>Pá</div>
+          <div>So</div>
+          <div>Ne</div>
+        </div>
+
+        <div id="calendar" class="calendar"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PŘEHLED -->
+    <section id="overviewScreen" class="screen">
+
+      <div class="header">
+        <h1 class="app-title">Přehled</h1>
+      </div>
+
+      <div class="content">
+
+        <div class="overview-tabs">
+          <button class="overview-tab" data-period="week" onclick="setOverviewPeriod('week')">
+            Týden
+          </button>
+
+          <button class="overview-tab active" data-period="month" onclick="setOverviewPeriod('month')">
+            Měsíc
+          </button>
+
+          <button class="overview-tab" data-period="year" onclick="setOverviewPeriod('year')">
+            Rok
+          </button>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title" id="overviewRangeTitle"></h2>
+          <div id="careStats"></div>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title">Doprovod a akce</h2>
+          <div id="activityStats"></div>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title">Škola</h2>
+          <div id="schoolStats"></div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- NASTAVENÍ -->
+    <section id="settingsScreen" class="screen">
+
+      <div class="header">
+        <h1 class="app-title">Nastavení</h1>
+      </div>
+
+      <div class="content">
+
+        <div class="card">
+          <h2 class="settings-title">Osoby</h2>
+
+          <div id="peopleList" class="person-chip-list"></div>
+
+          <button class="btn btn-soft" style="width:100%;margin-top:14px"
+            onclick="openPersonModal()">
+            + Přidat osobu
+          </button>
+        </div>
+
+        <div class="card">
+          <button class="btn btn-soft" style="width:100%" onclick="logout()">
+            Odhlásit
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SPODNÍ MENU -->
+    <nav class="bottom-nav">
+
+      <button class="nav-btn active" data-screen="calendarScreen"
+        onclick="showScreen('calendarScreen', this)">
+        <i data-lucide="calendar-days"></i>
+        Kalendář
       </button>
 
-    </div>
-
-
-    <div class="card">
-
-      <h2>Osoby</h2>
-
-      <div id="peopleList"></div>
-
-      <button class="secondary" onclick="openPersonModal()">
-        + Přidat osobu
+      <button class="nav-btn" data-screen="overviewScreen"
+        onclick="showScreen('overviewScreen', this)">
+        <i data-lucide="chart-no-axes-column"></i>
+        Přehled
       </button>
 
-    </div>
-
-
-    <div class="card">
-      <button class="secondary" onclick="logout()">
-        Odhlásit
+      <button class="nav-btn" data-screen="settingsScreen"
+        onclick="showScreen('settingsScreen', this)">
+        <i data-lucide="settings"></i>
+        Nastavení
       </button>
-    </div>
+
+    </nav>
 
   </div>
 
 </div>
 
 
-<!-- PÉČE -->
-<div id="careModal" class="modal">
-
+<!-- DETAIL DNE -->
+<div id="dayModal" class="modal">
   <div class="modal-box">
 
-    <h2 id="careTitle">Přidat péči</h2>
+    <div class="modal-grip"></div>
 
-    <label>Kdo pečoval</label>
+    <div class="modal-top">
+      <h2 id="dayModalTitle" class="modal-title"></h2>
+
+      <button class="close-btn" onclick="closeModal('dayModal')">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <!-- HLAVNĚ AKCE -->
+    <div id="dayEvents"></div>
+
+    <div class="day-actions">
+
+      <button class="btn btn-dark" onclick="openActivityModal()">
+        + Akce
+      </button>
+
+      <button class="btn btn-soft" onclick="openSchoolModal()">
+        + Škola
+      </button>
+
+    </div>
+
+    <!-- JEN TŘI ČÁRKY -->
+    <div class="three-lines-wrap">
+
+      <button class="three-lines" onclick="toggleCareDetails()">
+        <i data-lucide="menu"></i>
+      </button>
+
+      <div id="careDetails" class="care-details">
+
+        <div id="dayCareList"></div>
+
+        <button class="btn btn-soft" style="width:100%;margin-top:5px"
+          onclick="openCareModal()">
+          + Přidat
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- AKCE -->
+<div id="activityModal" class="modal">
+  <div class="modal-box">
+
+    <div class="modal-grip"></div>
+
+    <div class="modal-top">
+      <h2 id="activityModalTitle" class="modal-title">Přidat akci</h2>
+
+      <button class="close-btn" onclick="closeModal('activityModal')">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <label>Typ akce</label>
+
+    <select id="activityType">
+      <option value="Fotbal">Fotbal</option>
+      <option value="Atletika">Atletika</option>
+      <option value="Závody – atletika">Závody – atletika</option>
+      <option value="Turnaj – fotbal">Turnaj – fotbal</option>
+      <option value="Narozeniny / oslava">Narozeniny / oslava</option>
+      <option value="Lékař">Lékař</option>
+      <option value="Výlet">Výlet</option>
+      <option value="Školní akce">Školní akce</option>
+      <option value="Jiné">Jiné</option>
+    </select>
+
+    <label>Od</label>
+    <input id="activityStart" type="datetime-local">
+
+    <label>Do</label>
+    <input id="activityEnd" type="datetime-local">
+
+    <label>Doprovod</label>
+    <select id="activityCompanion">
+      <option value="">Neuvedeno</option>
+    </select>
+
+    <label>Místo</label>
+    <input id="activityLocation" type="text" placeholder="Volitelné">
+
+    <label>Poznámka</label>
+    <textarea id="activityNote" placeholder="Volitelné"></textarea>
+
+    <button class="btn btn-dark" style="width:100%" onclick="saveActivity()">
+      Uložit
+    </button>
+
+    <button id="deleteActivityBtn"
+      class="btn btn-danger hidden"
+      style="width:100%;margin-top:8px"
+      onclick="deleteActivity()">
+      Smazat
+    </button>
+
+  </div>
+</div>
+
+
+<!-- PÉČE -->
+<div id="careModal" class="modal">
+  <div class="modal-box">
+
+    <div class="modal-grip"></div>
+
+    <div class="modal-top">
+      <h2 id="careModalTitle" class="modal-title">Přidat</h2>
+
+      <button class="close-btn" onclick="closeModal('careModal')">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <label>Osoba</label>
     <select id="carePerson"></select>
 
     <label>Od</label>
@@ -248,73 +916,102 @@
     <label>Do</label>
     <input id="careEnd" type="datetime-local">
 
-    <label>Typ záznamu</label>
-    <select id="careType">
+    <label>Záznam</label>
+    <select id="careRecordType">
       <option value="actual">Skutečnost</option>
       <option value="planned">Plán</option>
     </select>
 
     <label>Poznámka</label>
-    <textarea id="careNote"
-      placeholder="Např. přivezl dříve, změna domluvy…"></textarea>
+    <textarea id="careNote"></textarea>
 
-    <button class="primary" onclick="saveCare()">
+    <button class="btn btn-dark" style="width:100%" onclick="saveCare()">
       Uložit
     </button>
 
-    <button id="deleteCareButton"
-      class="delete hidden"
+    <button id="deleteCareBtn"
+      class="btn btn-danger hidden"
+      style="width:100%;margin-top:8px"
       onclick="deleteCare()">
-      Smazat záznam
+      Smazat
     </button>
-
-    <button class="secondary" onclick="closeCareModal()">
-      Zrušit
-    </button>
-
-    <div id="careMessage"></div>
 
   </div>
+</div>
 
+
+<!-- ŠKOLA -->
+<div id="schoolModal" class="modal">
+  <div class="modal-box">
+
+    <div class="modal-grip"></div>
+
+    <div class="modal-top">
+      <h2 class="modal-title">Škola</h2>
+
+      <button class="close-btn" onclick="closeModal('schoolModal')">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <label>Co</label>
+
+    <select id="schoolType">
+      <option value="dropoff">Odvedl/a do školy</option>
+      <option value="pickup">Vyzvedl/a ze školy</option>
+    </select>
+
+    <label>Kdo</label>
+    <select id="schoolPerson"></select>
+
+    <label>Čas</label>
+    <input id="schoolTime" type="time">
+
+    <label>Poznámka</label>
+    <textarea id="schoolNote"></textarea>
+
+    <button class="btn btn-dark" style="width:100%" onclick="saveSchoolEvent()">
+      Uložit
+    </button>
+
+  </div>
 </div>
 
 
 <!-- OSOBA -->
 <div id="personModal" class="modal">
-
   <div class="modal-box">
 
-    <h2>Přidat osobu</h2>
+    <div class="modal-grip"></div>
+
+    <div class="modal-top">
+      <h2 class="modal-title">Přidat osobu</h2>
+
+      <button class="close-btn" onclick="closeModal('personModal')">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
 
     <label>Název</label>
-    <input id="personName"
-      placeholder="Máma, Táta, Babička Bezděz…">
+    <input id="personName" type="text"
+      placeholder="Máma, Táta, Babička Bezděz...">
 
     <label>Barva</label>
-    <input id="personColor"
-      type="color"
-      value="#e85d75">
+    <input id="personColor" type="color" value="#e85d75">
 
-    <button class="primary" onclick="savePerson()">
+    <button class="btn btn-dark" style="width:100%" onclick="savePerson()">
       Uložit
     </button>
 
-    <button class="secondary" onclick="closePersonModal()">
-      Zrušit
-    </button>
-
-    <div id="personMessage"></div>
-
   </div>
-
 </div>
 
 
 <script>
 
-/* =========================================
+/* =========================================================
    SUPABASE
-========================================= */
+========================================================= */
 
 const SUPABASE_URL =
   "https://xfuhiajigonazdrzzlvm.supabase.co";
@@ -327,27 +1024,51 @@ const db = supabase.createClient(
   SUPABASE_KEY
 );
 
+
+/* =========================================================
+   STAV
+========================================================= */
+
 let currentUser = null;
+
+let currentMonth = new Date();
+currentMonth.setDate(1);
+
+let selectedDate = dateKey(new Date());
+
 let people = [];
+let monthCare = [];
+let monthActivities = [];
+let monthSchool = [];
+
 let editingCareId = null;
+let editingActivityId = null;
+
+let overviewPeriod = "month";
 
 
-/* =========================================
+/* =========================================================
+   IKONY – ČERNOBÍLÉ
+========================================================= */
+
+const activityIcons = {
+  "Fotbal": "circle-dot",
+  "Atletika": "person-standing",
+  "Závody – atletika": "medal",
+  "Turnaj – fotbal": "trophy",
+  "Narozeniny / oslava": "cake-slice",
+  "Lékař": "stethoscope",
+  "Výlet": "heart",
+  "Školní akce": "backpack",
+  "Jiné": "calendar-heart"
+};
+
+
+/* =========================================================
    START
-========================================= */
+========================================================= */
 
 async function startApp() {
-
-  document.getElementById("todayDate").textContent =
-    new Date().toLocaleDateString(
-      "cs-CZ",
-      {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      }
-    );
 
   const {
     data: { session }
@@ -355,29 +1076,32 @@ async function startApp() {
 
   if (session) {
     currentUser = session.user;
-    await showApp();
+    await enterApp();
   }
+
+  refreshIcons();
 }
 
 startApp();
 
 
-/* =========================================
-   PŘIHLÁŠENÍ
-========================================= */
+/* =========================================================
+   LOGIN
+========================================================= */
 
 async function login() {
 
   const email =
-    document.getElementById("email").value.trim();
+    document.getElementById("loginEmail").value.trim();
 
   const password =
-    document.getElementById("password").value;
+    document.getElementById("loginPassword").value;
 
-  const msg =
+  const message =
     document.getElementById("loginMessage");
 
-  msg.innerHTML = "Přihlašuji…";
+  message.innerHTML =
+    `<div class="message">Přihlašuji…</div>`;
 
   const { data, error } =
     await db.auth.signInWithPassword({
@@ -386,16 +1110,16 @@ async function login() {
     });
 
   if (error) {
-    msg.innerHTML =
-      `<div class="message">Chyba: ${error.message}</div>`;
+    message.innerHTML =
+      `<div class="message">Chyba: ${safe(error.message)}</div>`;
     return;
   }
 
   currentUser = data.user;
 
-  msg.innerHTML = "";
+  message.innerHTML = "";
 
-  await showApp();
+  await enterApp();
 }
 
 
@@ -408,83 +1132,670 @@ async function logout() {
   document.getElementById("mainApp")
     .classList.add("hidden");
 
-  document.getElementById("loginCard")
+  document.getElementById("loginScreen")
     .classList.remove("hidden");
 }
 
 
-async function showApp() {
+async function enterApp() {
 
-  document.getElementById("loginCard")
+  document.getElementById("loginScreen")
     .classList.add("hidden");
 
   document.getElementById("mainApp")
     .classList.remove("hidden");
 
   await loadPeople();
-  await loadToday();
+  await loadMonthData();
 }
 
 
-/* =========================================
-   OSOBY
-========================================= */
+/* =========================================================
+   OBRAZOVKY
+========================================================= */
 
-function openPersonModal() {
+function showScreen(screenId, button) {
 
-  document.getElementById("personName").value = "";
+  document.querySelectorAll(".screen")
+    .forEach(x => x.classList.remove("active"));
 
-  document.getElementById("personMessage").innerHTML = "";
+  document.getElementById(screenId)
+    .classList.add("active");
 
-  document.getElementById("personModal")
-    .classList.add("open");
-}
+  document.querySelectorAll(".nav-btn")
+    .forEach(x => x.classList.remove("active"));
 
+  button.classList.add("active");
 
-function closePersonModal() {
-
-  document.getElementById("personModal")
-    .classList.remove("open");
-}
-
-
-async function savePerson() {
-
-  const name =
-    document.getElementById("personName").value.trim();
-
-  const color =
-    document.getElementById("personColor").value;
-
-  const msg =
-    document.getElementById("personMessage");
-
-  if (!name) {
-    msg.innerHTML =
-      `<div class="message">Napiš název osoby.</div>`;
-    return;
+  if (screenId === "overviewScreen") {
+    renderOverview();
   }
 
-  const { error } =
-    await db
-      .from("people")
-      .insert({
-        user_id: currentUser.id,
-        name: name,
-        color: color
+  refreshIcons();
+}
+
+
+/* =========================================================
+   MĚSÍC
+========================================================= */
+
+function changeMonth(diff) {
+
+  currentMonth.setMonth(
+    currentMonth.getMonth() + diff
+  );
+
+  loadMonthData();
+}
+
+
+function goToday() {
+
+  currentMonth = new Date();
+  currentMonth.setDate(1);
+
+  loadMonthData();
+}
+
+
+async function loadMonthData() {
+
+  const start =
+    new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
+      1
+    );
+
+  const gridStart = startOfCalendarGrid(start);
+
+  const gridEnd =
+    new Date(gridStart);
+
+  gridEnd.setDate(gridEnd.getDate() + 42);
+
+  const [
+    careResult,
+    activityResult,
+    schoolResult
+  ] = await Promise.all([
+
+    db
+      .from("care_periods")
+      .select(`
+        *,
+        people (
+          id,
+          name,
+          color
+        )
+      `)
+      .lt("start_at", gridEnd.toISOString())
+      .gt("end_at", gridStart.toISOString()),
+
+    db
+      .from("activities")
+      .select(`
+        *,
+        people:companion_person_id (
+          id,
+          name,
+          color
+        )
+      `)
+      .gte("start_at", gridStart.toISOString())
+      .lt("start_at", gridEnd.toISOString()),
+
+    db
+      .from("school_events")
+      .select(`
+        *,
+        people (
+          id,
+          name,
+          color
+        )
+      `)
+      .gte("event_date", dateKey(gridStart))
+      .lt("event_date", dateKey(gridEnd))
+  ]);
+
+  monthCare = careResult.data || [];
+  monthActivities = activityResult.data || [];
+  monthSchool = schoolResult.data || [];
+
+  document.getElementById("monthTitle").textContent =
+    currentMonth.toLocaleDateString(
+      "cs-CZ",
+      {
+        month: "long",
+        year: "numeric"
+      }
+    );
+
+  renderCalendar();
+}
+
+
+/* =========================================================
+   KALENDÁŘ
+========================================================= */
+
+function renderCalendar() {
+
+  const calendar =
+    document.getElementById("calendar");
+
+  calendar.innerHTML = "";
+
+  const gridStart =
+    startOfCalendarGrid(currentMonth);
+
+  for (let i = 0; i < 42; i++) {
+
+    const day =
+      new Date(gridStart);
+
+    day.setDate(gridStart.getDate() + i);
+
+    const key =
+      dateKey(day);
+
+    const cell =
+      document.createElement("div");
+
+    cell.className = "day";
+
+    if (
+      day.getMonth() !==
+      currentMonth.getMonth()
+    ) {
+      cell.classList.add("other-month");
+    }
+
+    if (key === dateKey(new Date())) {
+      cell.classList.add("today");
+    }
+
+    cell.onclick = () =>
+      openDay(key);
+
+
+    const number =
+      document.createElement("div");
+
+    number.className = "day-number";
+    number.textContent = day.getDate();
+
+    cell.appendChild(number);
+
+
+    /* AKCE */
+    const activities =
+      monthActivities.filter(
+        x =>
+          dateKey(new Date(x.start_at)) === key
+      );
+
+    const school =
+      monthSchool.filter(
+        x => x.event_date === key
+      );
+
+    if (activities.length || school.length) {
+
+      const icons =
+        document.createElement("div");
+
+      icons.className = "day-icons";
+
+      const visibleActivities =
+        activities.slice(0, 4);
+
+      visibleActivities.forEach(activity => {
+
+        const icon =
+          document.createElement("i");
+
+        icon.setAttribute(
+          "data-lucide",
+          activityIcons[activity.title]
+            || "calendar"
+        );
+
+        icons.appendChild(icon);
       });
 
-  if (error) {
-    msg.innerHTML =
-      `<div class="message">Chyba: ${error.message}</div>`;
+      if (
+        activities.length < 4 &&
+        school.length
+      ) {
+        const icon =
+          document.createElement("i");
+
+        icon.setAttribute(
+          "data-lucide",
+          "school"
+        );
+
+        icons.appendChild(icon);
+      }
+
+      const total =
+        activities.length +
+        (school.length ? 1 : 0);
+
+      if (total > 4) {
+
+        const more =
+          document.createElement("span");
+
+        more.className = "more-icons";
+        more.textContent = "+" + (total - 4);
+
+        icons.appendChild(more);
+      }
+
+      cell.appendChild(icons);
+    }
+
+
+    /* PÉČE – ČASOVÉ ÚSEKY */
+    const track =
+      document.createElement("div");
+
+    track.className = "care-track";
+
+    const dayStart =
+      new Date(
+        day.getFullYear(),
+        day.getMonth(),
+        day.getDate(),
+        0, 0, 0
+      );
+
+    const dayEnd =
+      new Date(
+        day.getFullYear(),
+        day.getMonth(),
+        day.getDate() + 1,
+        0, 0, 0
+      );
+
+    const careForDay =
+      monthCare.filter(item => {
+
+        const s = new Date(item.start_at);
+        const e = new Date(item.end_at);
+
+        return (
+          s < dayEnd &&
+          e > dayStart
+        );
+      });
+
+    careForDay.forEach(item => {
+
+      const s =
+        Math.max(
+          new Date(item.start_at).getTime(),
+          dayStart.getTime()
+        );
+
+      const e =
+        Math.min(
+          new Date(item.end_at).getTime(),
+          dayEnd.getTime()
+        );
+
+      const dayMs =
+        24 * 60 * 60 * 1000;
+
+      const left =
+        ((s - dayStart.getTime()) / dayMs) * 100;
+
+      const width =
+        ((e - s) / dayMs) * 100;
+
+      const segment =
+        document.createElement("div");
+
+      segment.className = "care-segment";
+
+      if (item.record_type === "planned") {
+        segment.classList.add("planned-segment");
+      }
+
+      segment.style.left =
+        left + "%";
+
+      segment.style.width =
+        width + "%";
+
+      segment.style.backgroundColor =
+        item.people?.color || "#999";
+
+      track.appendChild(segment);
+    });
+
+    cell.appendChild(track);
+
+    calendar.appendChild(cell);
+  }
+
+  refreshIcons();
+}
+
+
+/* =========================================================
+   DETAIL DNE
+========================================================= */
+
+function openDay(key) {
+
+  selectedDate = key;
+
+  const date =
+    parseDateKey(key);
+
+  document.getElementById("dayModalTitle")
+    .textContent =
+      date.toLocaleDateString(
+        "cs-CZ",
+        {
+          weekday: "long",
+          day: "numeric",
+          month: "long"
+        }
+      );
+
+  document.getElementById("careDetails")
+    .classList.remove("open");
+
+  renderDayEvents();
+  renderDayCare();
+
+  openModal("dayModal");
+}
+
+
+function renderDayEvents() {
+
+  const box =
+    document.getElementById("dayEvents");
+
+  box.innerHTML = "";
+
+  const activities =
+    monthActivities
+      .filter(
+        x =>
+          dateKey(new Date(x.start_at)) ===
+          selectedDate
+      )
+      .sort(
+        (a,b) =>
+          new Date(a.start_at) -
+          new Date(b.start_at)
+      );
+
+  const school =
+    monthSchool
+      .filter(
+        x =>
+          x.event_date === selectedDate
+      );
+
+
+  if (!activities.length && !school.length) {
+
+    box.innerHTML =
+      `<div class="empty">
+        Na tento den zatím není naplánovaná žádná akce.
+      </div>`;
+  }
+
+
+  activities.forEach(item => {
+
+    const row =
+      document.createElement("div");
+
+    row.className = "day-event";
+
+    row.onclick =
+      () => editActivity(item);
+
+    row.innerHTML = `
+      <div class="event-icon">
+        <i data-lucide="${
+          activityIcons[item.title] || "calendar"
+        }"></i>
+      </div>
+
+      <div class="event-main">
+
+        <div class="event-name">
+          ${safe(item.title)}
+        </div>
+
+        <div class="event-meta">
+          ${formatTime(item.start_at)}
+          ${
+            item.end_at
+              ? " – " + formatTime(item.end_at)
+              : ""
+          }
+
+          ${
+            item.people?.name
+              ? "<br>Doprovod: " +
+                safe(item.people.name)
+              : ""
+          }
+
+          ${
+            item.location
+              ? "<br>" + safe(item.location)
+              : ""
+          }
+
+          ${
+            item.note
+              ? "<br>" + safe(item.note)
+              : ""
+          }
+        </div>
+
+      </div>
+    `;
+
+    box.appendChild(row);
+  });
+
+
+  school.forEach(item => {
+
+    const row =
+      document.createElement("div");
+
+    row.className = "day-event";
+
+    const action =
+      item.event_type === "pickup"
+        ? "Vyzvednutí ze školy"
+        : "Odvedení do školy";
+
+    row.innerHTML = `
+      <div class="event-icon">
+        <i data-lucide="school"></i>
+      </div>
+
+      <div class="event-main">
+
+        <div class="event-name">
+          ${action}
+        </div>
+
+        <div class="event-meta">
+          ${
+            item.event_time
+              ? item.event_time.substring(0,5)
+              : ""
+          }
+
+          ${
+            item.people?.name
+              ? "<br>" + safe(item.people.name)
+              : ""
+          }
+
+          ${
+            item.note
+              ? "<br>" + safe(item.note)
+              : ""
+          }
+        </div>
+
+      </div>
+    `;
+
+    box.appendChild(row);
+  });
+
+  refreshIcons();
+}
+
+
+function toggleCareDetails() {
+
+  document.getElementById("careDetails")
+    .classList.toggle("open");
+}
+
+
+function renderDayCare() {
+
+  const box =
+    document.getElementById("dayCareList");
+
+  box.innerHTML = "";
+
+  const day =
+    parseDateKey(selectedDate);
+
+  const dayStart =
+    new Date(
+      day.getFullYear(),
+      day.getMonth(),
+      day.getDate()
+    );
+
+  const dayEnd =
+    new Date(
+      day.getFullYear(),
+      day.getMonth(),
+      day.getDate() + 1
+    );
+
+  const care =
+    monthCare
+      .filter(item => {
+
+        const s =
+          new Date(item.start_at);
+
+        const e =
+          new Date(item.end_at);
+
+        return (
+          s < dayEnd &&
+          e > dayStart
+        );
+      })
+      .sort(
+        (a,b) =>
+          new Date(a.start_at) -
+          new Date(b.start_at)
+      );
+
+  if (!care.length) {
+
+    box.innerHTML =
+      `<div class="empty">
+        Bez záznamu.
+      </div>`;
+
     return;
   }
 
-  closePersonModal();
 
-  await loadPeople();
+  care.forEach(item => {
+
+    const shownStart =
+      new Date(
+        Math.max(
+          new Date(item.start_at),
+          dayStart
+        )
+      );
+
+    const shownEnd =
+      new Date(
+        Math.min(
+          new Date(item.end_at),
+          dayEnd
+        )
+      );
+
+    const row =
+      document.createElement("div");
+
+    row.className = "care-row";
+
+    row.style.borderLeftColor =
+      item.people?.color || "#999";
+
+    row.onclick =
+      () => editCare(item);
+
+    row.innerHTML = `
+      <div class="care-person">
+        ${safe(item.people?.name || "Osoba")}
+      </div>
+
+      <div class="care-meta">
+        ${formatOnlyTime(shownStart)}
+        –
+        ${
+          shownEnd.getTime() ===
+          dayEnd.getTime()
+            ? "24:00"
+            : formatOnlyTime(shownEnd)
+        }
+
+        ${
+          item.record_type === "planned"
+            ? " · plán"
+            : ""
+        }
+
+        ${
+          item.note
+            ? "<br>" + safe(item.note)
+            : ""
+        }
+      </div>
+    `;
+
+    box.appendChild(row);
+  });
 }
 
+
+/* =========================================================
+   OSOBY
+========================================================= */
 
 async function loadPeople() {
 
@@ -501,19 +1812,34 @@ async function loadPeople() {
 
   people = data || [];
 
-  const list =
+  renderPeople();
+
+  fillPersonSelect(
+    document.getElementById("carePerson")
+  );
+
+  fillPersonSelect(
+    document.getElementById("activityCompanion"),
+    true
+  );
+
+  fillPersonSelect(
+    document.getElementById("schoolPerson")
+  );
+}
+
+
+function renderPeople() {
+
+  const box =
     document.getElementById("peopleList");
 
-  const select =
-    document.getElementById("carePerson");
-
-  list.innerHTML = "";
-  select.innerHTML = "";
+  box.innerHTML = "";
 
   if (!people.length) {
 
-    list.innerHTML =
-      `<div class="small">
+    box.innerHTML =
+      `<div class="empty">
         Zatím nejsou přidané žádné osoby.
       </div>`;
 
@@ -525,24 +1851,38 @@ async function loadPeople() {
     const row =
       document.createElement("div");
 
-    row.className = "person-row";
+    row.className = "person-chip";
 
-    const dot =
-      document.createElement("span");
+    row.innerHTML = `
+      <span
+        class="person-dot"
+        style="background:${person.color}">
+      </span>
 
-    dot.className = "dot";
-    dot.style.background = person.color;
+      <span>${safe(person.name)}</span>
+    `;
 
-    const text =
-      document.createElement("span");
+    box.appendChild(row);
+  });
+}
 
-    text.textContent = person.name;
 
-    row.appendChild(dot);
-    row.appendChild(text);
+function fillPersonSelect(select, allowEmpty=false) {
 
-    list.appendChild(row);
+  select.innerHTML = "";
 
+  if (allowEmpty) {
+
+    const empty =
+      document.createElement("option");
+
+    empty.value = "";
+    empty.textContent = "Neuvedeno";
+
+    select.appendChild(empty);
+  }
+
+  people.forEach(person => {
 
     const option =
       document.createElement("option");
@@ -555,11 +1895,56 @@ async function loadPeople() {
 }
 
 
-/* =========================================
-   NOVÁ PÉČE
-========================================= */
+function openPersonModal() {
 
-function openNewCare() {
+  document.getElementById("personName").value = "";
+  document.getElementById("personColor").value = "#e85d75";
+
+  openModal("personModal");
+}
+
+
+async function savePerson() {
+
+  const name =
+    document.getElementById("personName")
+      .value.trim();
+
+  const color =
+    document.getElementById("personColor")
+      .value;
+
+  if (!name) {
+    alert("Napiš název osoby.");
+    return;
+  }
+
+  const { error } =
+    await db
+      .from("people")
+      .insert({
+        user_id: currentUser.id,
+        name,
+        color
+      });
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  closeModal("personModal");
+
+  await loadPeople();
+  await loadMonthData();
+}
+
+
+/* =========================================================
+   PÉČE
+========================================================= */
+
+function openCareModal() {
 
   if (!people.length) {
     alert("Nejdřív přidej alespoň jednu osobu.");
@@ -568,44 +1953,80 @@ function openNewCare() {
 
   editingCareId = null;
 
-  document.getElementById("careTitle").textContent =
-    "Přidat péči";
+  document.getElementById("careModalTitle")
+    .textContent = "Přidat";
 
-  document.getElementById("deleteCareButton")
+  document.getElementById("deleteCareBtn")
     .classList.add("hidden");
+
+  const date =
+    parseDateKey(selectedDate);
+
+  const start =
+    new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      0,
+      1
+    );
+
+  const end =
+    new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      23,
+      59
+    );
+
+  document.getElementById("careStart").value =
+    localDateTime(start);
+
+  document.getElementById("careEnd").value =
+    localDateTime(end);
+
+  document.getElementById("careRecordType").value =
+    "actual";
 
   document.getElementById("careNote").value = "";
 
-  document.getElementById("careType").value = "actual";
+  openModal("careModal");
+}
 
-  const now = new Date();
 
-  const later =
-    new Date(now.getTime() + 2 * 60 * 60 * 1000);
+function editCare(item) {
+
+  editingCareId = item.id;
+
+  document.getElementById("careModalTitle")
+    .textContent = "Upravit";
+
+  document.getElementById("deleteCareBtn")
+    .classList.remove("hidden");
+
+  document.getElementById("carePerson").value =
+    item.person_id;
 
   document.getElementById("careStart").value =
-    localDateTime(now);
+    localDateTime(
+      new Date(item.start_at)
+    );
 
   document.getElementById("careEnd").value =
-    localDateTime(later);
+    localDateTime(
+      new Date(item.end_at)
+    );
 
-  document.getElementById("careMessage").innerHTML = "";
+  document.getElementById("careRecordType").value =
+    item.record_type;
 
-  document.getElementById("careModal")
-    .classList.add("open");
+  document.getElementById("careNote").value =
+    item.note || "";
+
+  openModal("careModal");
 }
 
-
-function closeCareModal() {
-
-  document.getElementById("careModal")
-    .classList.remove("open");
-}
-
-
-/* =========================================
-   ULOŽENÍ / ÚPRAVA
-========================================= */
 
 async function saveCare() {
 
@@ -618,261 +2039,73 @@ async function saveCare() {
   const end =
     document.getElementById("careEnd").value;
 
-  const type =
-    document.getElementById("careType").value;
+  const recordType =
+    document.getElementById("careRecordType").value;
 
   const note =
-    document.getElementById("careNote").value.trim();
-
-  const msg =
-    document.getElementById("careMessage");
+    document.getElementById("careNote")
+      .value.trim();
 
   if (!personId || !start || !end) {
-
-    msg.innerHTML =
-      `<div class="message">
-        Vyplň osobu, začátek i konec.
-      </div>`;
-
+    alert("Vyplň osobu a oba časy.");
     return;
   }
 
-  if (new Date(end) <= new Date(start)) {
-
-    msg.innerHTML =
-      `<div class="message">
-        Čas „Do“ musí být později než „Od“.
-      </div>`;
-
+  if (
+    new Date(end) <=
+    new Date(start)
+  ) {
+    alert("Čas do musí být později než čas od.");
     return;
   }
 
   const values = {
     user_id: currentUser.id,
     person_id: personId,
-    start_at: new Date(start).toISOString(),
-    end_at: new Date(end).toISOString(),
-    record_type: type,
+    start_at:
+      new Date(start).toISOString(),
+    end_at:
+      new Date(end).toISOString(),
+    record_type: recordType,
     note: note || null
   };
 
-  let error;
+  let result;
 
   if (editingCareId) {
 
-    const result =
+    result =
       await db
         .from("care_periods")
         .update(values)
         .eq("id", editingCareId);
 
-    error = result.error;
-
   } else {
 
-    const result =
+    result =
       await db
         .from("care_periods")
         .insert(values);
-
-    error = result.error;
   }
 
-  if (error) {
-
-    msg.innerHTML =
-      `<div class="message">
-        Chyba: ${error.message}
-      </div>`;
-
+  if (result.error) {
+    alert(result.error.message);
     return;
   }
 
-  closeCareModal();
+  closeModal("careModal");
 
-  await loadToday();
+  await loadMonthData();
+
+  renderDayCare();
 }
 
-
-/* =========================================
-   NAČTENÍ DNEŠNÍ PÉČE
-========================================= */
-
-async function loadToday() {
-
-  const start = new Date();
-  start.setHours(0,0,0,0);
-
-  const end = new Date();
-  end.setHours(23,59,59,999);
-
-  const { data, error } =
-    await db
-      .from("care_periods")
-      .select(`
-        *,
-        people (
-          name,
-          color
-        )
-      `)
-      .lte("start_at", end.toISOString())
-      .gte("end_at", start.toISOString())
-      .order("start_at");
-
-  const box =
-    document.getElementById("todayRecords");
-
-  if (error) {
-
-    box.innerHTML =
-      `<div class="message">
-        Chyba při načítání: ${error.message}
-      </div>`;
-
-    return;
-  }
-
-  if (!data || !data.length) {
-
-    box.innerHTML =
-      `<div class="small">
-        Zatím tu nejsou žádné záznamy.
-      </div>`;
-
-    return;
-  }
-
-  box.innerHTML = "";
-
-  data.forEach(item => {
-
-    const row =
-      document.createElement("div");
-
-    row.className = "record";
-
-    row.onclick = () => editCare(item);
-
-
-    const nameLine =
-      document.createElement("div");
-
-    nameLine.style.display = "flex";
-    nameLine.style.alignItems = "center";
-    nameLine.style.gap = "8px";
-
-
-    const dot =
-      document.createElement("span");
-
-    dot.className = "dot";
-
-    dot.style.background =
-      item.people?.color || "#999";
-
-
-    const strong =
-      document.createElement("strong");
-
-    strong.textContent =
-      item.people?.name || "Osoba";
-
-
-    nameLine.appendChild(dot);
-    nameLine.appendChild(strong);
-
-    row.appendChild(nameLine);
-
-
-    const time =
-      document.createElement("div");
-
-    time.style.marginTop = "7px";
-
-    time.textContent =
-      formatDateTime(item.start_at)
-      + " – "
-      + formatDateTime(item.end_at);
-
-    row.appendChild(time);
-
-
-    const type =
-      document.createElement("div");
-
-    type.className = "small";
-
-    type.textContent =
-      item.record_type === "planned"
-        ? "Plán"
-        : "Skutečnost";
-
-    row.appendChild(type);
-
-
-    if (item.note) {
-
-      const note =
-        document.createElement("div");
-
-      note.className = "small";
-
-      note.textContent = item.note;
-
-      row.appendChild(note);
-    }
-
-    box.appendChild(row);
-  });
-}
-
-
-/* =========================================
-   ÚPRAVA ZÁZNAMU
-========================================= */
-
-function editCare(item) {
-
-  editingCareId = item.id;
-
-  document.getElementById("careTitle").textContent =
-    "Upravit péči";
-
-  document.getElementById("carePerson").value =
-    item.person_id;
-
-  document.getElementById("careStart").value =
-    localDateTime(new Date(item.start_at));
-
-  document.getElementById("careEnd").value =
-    localDateTime(new Date(item.end_at));
-
-  document.getElementById("careType").value =
-    item.record_type;
-
-  document.getElementById("careNote").value =
-    item.note || "";
-
-  document.getElementById("deleteCareButton")
-    .classList.remove("hidden");
-
-  document.getElementById("careMessage").innerHTML = "";
-
-  document.getElementById("careModal")
-    .classList.add("open");
-}
-
-
-/* =========================================
-   SMAZÁNÍ
-========================================= */
 
 async function deleteCare() {
 
   if (!editingCareId) return;
 
-  if (!confirm("Opravdu chceš tento záznam smazat?")) {
+  if (!confirm("Opravdu smazat tento záznam?")) {
     return;
   }
 
@@ -883,56 +2116,824 @@ async function deleteCare() {
       .eq("id", editingCareId);
 
   if (error) {
-
-    document.getElementById("careMessage").innerHTML =
-      `<div class="message">
-        Chyba: ${error.message}
-      </div>`;
-
+    alert(error.message);
     return;
   }
 
-  closeCareModal();
+  closeModal("careModal");
 
-  editingCareId = null;
+  await loadMonthData();
 
-  await loadToday();
+  renderDayCare();
 }
 
 
-/* =========================================
-   POMOCNÉ FUNKCE
-========================================= */
+/* =========================================================
+   AKCE
+========================================================= */
+
+function openActivityModal() {
+
+  editingActivityId = null;
+
+  document.getElementById("activityModalTitle")
+    .textContent = "Přidat akci";
+
+  document.getElementById("deleteActivityBtn")
+    .classList.add("hidden");
+
+  const d =
+    parseDateKey(selectedDate);
+
+  const start =
+    new Date(
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate(),
+      16, 0
+    );
+
+  const end =
+    new Date(
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate(),
+      17, 0
+    );
+
+  document.getElementById("activityType").value =
+    "Fotbal";
+
+  document.getElementById("activityStart").value =
+    localDateTime(start);
+
+  document.getElementById("activityEnd").value =
+    localDateTime(end);
+
+  document.getElementById("activityCompanion").value = "";
+  document.getElementById("activityLocation").value = "";
+  document.getElementById("activityNote").value = "";
+
+  openModal("activityModal");
+}
+
+
+function editActivity(item) {
+
+  editingActivityId = item.id;
+
+  document.getElementById("activityModalTitle")
+    .textContent = "Upravit akci";
+
+  document.getElementById("deleteActivityBtn")
+    .classList.remove("hidden");
+
+  document.getElementById("activityType").value =
+    item.title;
+
+  document.getElementById("activityStart").value =
+    localDateTime(
+      new Date(item.start_at)
+    );
+
+  document.getElementById("activityEnd").value =
+    item.end_at
+      ? localDateTime(new Date(item.end_at))
+      : "";
+
+  document.getElementById("activityCompanion").value =
+    item.companion_person_id || "";
+
+  document.getElementById("activityLocation").value =
+    item.location || "";
+
+  document.getElementById("activityNote").value =
+    item.note || "";
+
+  openModal("activityModal");
+}
+
+
+async function saveActivity() {
+
+  const title =
+    document.getElementById("activityType").value;
+
+  const start =
+    document.getElementById("activityStart").value;
+
+  const end =
+    document.getElementById("activityEnd").value;
+
+  const companion =
+    document.getElementById("activityCompanion").value;
+
+  const location =
+    document.getElementById("activityLocation")
+      .value.trim();
+
+  const note =
+    document.getElementById("activityNote")
+      .value.trim();
+
+  if (!start) {
+    alert("Vyplň začátek akce.");
+    return;
+  }
+
+  const values = {
+    user_id: currentUser.id,
+    title,
+    start_at:
+      new Date(start).toISOString(),
+    end_at:
+      end
+        ? new Date(end).toISOString()
+        : null,
+    companion_person_id:
+      companion || null,
+    location:
+      location || null,
+    note:
+      note || null
+  };
+
+  let result;
+
+  if (editingActivityId) {
+
+    result =
+      await db
+        .from("activities")
+        .update(values)
+        .eq("id", editingActivityId);
+
+  } else {
+
+    result =
+      await db
+        .from("activities")
+        .insert(values);
+  }
+
+  if (result.error) {
+    alert(result.error.message);
+    return;
+  }
+
+  closeModal("activityModal");
+
+  await loadMonthData();
+
+  renderDayEvents();
+}
+
+
+async function deleteActivity() {
+
+  if (!editingActivityId) return;
+
+  if (!confirm("Opravdu smazat tuto akci?")) {
+    return;
+  }
+
+  const { error } =
+    await db
+      .from("activities")
+      .delete()
+      .eq("id", editingActivityId);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  closeModal("activityModal");
+
+  await loadMonthData();
+
+  renderDayEvents();
+}
+
+
+/* =========================================================
+   ŠKOLA
+========================================================= */
+
+function openSchoolModal() {
+
+  document.getElementById("schoolType").value =
+    "pickup";
+
+  document.getElementById("schoolTime").value =
+    "14:30";
+
+  document.getElementById("schoolNote").value = "";
+
+  openModal("schoolModal");
+}
+
+
+async function saveSchoolEvent() {
+
+  const type =
+    document.getElementById("schoolType").value;
+
+  const personId =
+    document.getElementById("schoolPerson").value;
+
+  const time =
+    document.getElementById("schoolTime").value;
+
+  const note =
+    document.getElementById("schoolNote")
+      .value.trim();
+
+  if (!personId) {
+    alert("Vyber osobu.");
+    return;
+  }
+
+  const { error } =
+    await db
+      .from("school_events")
+      .insert({
+        user_id: currentUser.id,
+        event_date: selectedDate,
+        event_type: type,
+        person_id: personId,
+        event_time: time || null,
+        note: note || null
+      });
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  closeModal("schoolModal");
+
+  await loadMonthData();
+
+  renderDayEvents();
+}
+
+
+/* =========================================================
+   PŘEHLED
+========================================================= */
+
+function setOverviewPeriod(period) {
+
+  overviewPeriod = period;
+
+  document.querySelectorAll(".overview-tab")
+    .forEach(btn => {
+
+      btn.classList.toggle(
+        "active",
+        btn.dataset.period === period
+      );
+    });
+
+  renderOverview();
+}
+
+
+async function renderOverview() {
+
+  const range =
+    getOverviewRange();
+
+  document.getElementById("overviewRangeTitle")
+    .textContent = range.title;
+
+  const [
+    careResult,
+    activityResult,
+    schoolResult
+  ] = await Promise.all([
+
+    db
+      .from("care_periods")
+      .select(`
+        *,
+        people (
+          id,
+          name,
+          color
+        )
+      `)
+      .eq("record_type", "actual")
+      .lt("start_at", range.end.toISOString())
+      .gt("end_at", range.start.toISOString()),
+
+    db
+      .from("activities")
+      .select(`
+        *,
+        people:companion_person_id (
+          id,
+          name,
+          color
+        )
+      `)
+      .gte("start_at", range.start.toISOString())
+      .lt("start_at", range.end.toISOString()),
+
+    db
+      .from("school_events")
+      .select(`
+        *,
+        people (
+          id,
+          name,
+          color
+        )
+      `)
+      .gte("event_date", dateKey(range.start))
+      .lt("event_date", dateKey(range.end))
+  ]);
+
+  renderCareStats(
+    careResult.data || [],
+    range
+  );
+
+  renderActivityStats(
+    activityResult.data || []
+  );
+
+  renderSchoolStats(
+    schoolResult.data || []
+  );
+}
+
+
+function renderCareStats(care, range) {
+
+  const map = {};
+
+  care.forEach(item => {
+
+    const start =
+      Math.max(
+        new Date(item.start_at).getTime(),
+        range.start.getTime()
+      );
+
+    const end =
+      Math.min(
+        new Date(item.end_at).getTime(),
+        range.end.getTime()
+      );
+
+    if (end <= start) return;
+
+    const hours =
+      (end - start) / 3600000;
+
+    const id =
+      item.person_id;
+
+    if (!map[id]) {
+      map[id] = {
+        name:
+          item.people?.name || "Osoba",
+        color:
+          item.people?.color || "#999",
+        hours: 0
+      };
+    }
+
+    map[id].hours += hours;
+  });
+
+  const box =
+    document.getElementById("careStats");
+
+  const rows =
+    Object.values(map)
+      .sort((a,b) => b.hours - a.hours);
+
+  if (!rows.length) {
+    box.innerHTML =
+      `<div class="empty">Bez záznamů.</div>`;
+    return;
+  }
+
+  box.innerHTML = rows
+    .map(item => `
+      <div class="stat-row">
+
+        <div class="stat-name">
+          <span class="person-dot"
+            style="background:${item.color}">
+          </span>
+          ${safe(item.name)}
+        </div>
+
+        <div class="stat-value">
+          ${formatHours(item.hours)}
+        </div>
+
+      </div>
+    `)
+    .join("");
+}
+
+
+function renderActivityStats(items) {
+
+  const map = {};
+
+  items.forEach(item => {
+
+    if (!map[item.title]) {
+      map[item.title] = {
+        count: 0,
+        companion: {}
+      };
+    }
+
+    map[item.title].count++;
+
+    if (item.people?.name) {
+
+      const name =
+        item.people.name;
+
+      map[item.title].companion[name] =
+        (map[item.title].companion[name] || 0) + 1;
+    }
+  });
+
+  const box =
+    document.getElementById("activityStats");
+
+  const names =
+    Object.keys(map);
+
+  if (!names.length) {
+    box.innerHTML =
+      `<div class="empty">Bez akcí.</div>`;
+    return;
+  }
+
+  box.innerHTML =
+    names.map(name => {
+
+      const companionText =
+        Object.entries(map[name].companion)
+          .map(([person,count]) =>
+            `${safe(person)} ${count}×`
+          )
+          .join(" · ");
+
+      return `
+        <div class="stat-row">
+
+          <div>
+            <div class="activity-stat">
+              <i data-lucide="${
+                activityIcons[name] || "calendar"
+              }"></i>
+
+              <strong>${safe(name)}</strong>
+            </div>
+
+            ${
+              companionText
+                ? `<div class="event-meta">${companionText}</div>`
+                : ""
+            }
+          </div>
+
+          <div class="stat-value">
+            ${map[name].count}×
+          </div>
+
+        </div>
+      `;
+    }).join("");
+
+  refreshIcons();
+}
+
+
+function renderSchoolStats(items) {
+
+  const map = {};
+
+  items.forEach(item => {
+
+    const key =
+      item.people?.name || "Neuvedeno";
+
+    if (!map[key]) {
+      map[key] = {
+        pickup: 0,
+        dropoff: 0
+      };
+    }
+
+    map[key][item.event_type]++;
+  });
+
+  const box =
+    document.getElementById("schoolStats");
+
+  if (!Object.keys(map).length) {
+    box.innerHTML =
+      `<div class="empty">Bez záznamů.</div>`;
+    return;
+  }
+
+  box.innerHTML =
+    Object.entries(map)
+      .map(([name, values]) => `
+        <div class="stat-row">
+
+          <div>
+            <strong>${safe(name)}</strong>
+
+            <div class="event-meta">
+              Odvedení: ${values.dropoff}×
+              ·
+              Vyzvednutí: ${values.pickup}×
+            </div>
+          </div>
+
+          <div class="stat-value">
+            ${values.pickup + values.dropoff}×
+          </div>
+
+        </div>
+      `)
+      .join("");
+}
+
+
+function getOverviewRange() {
+
+  const now = new Date();
+
+  if (overviewPeriod === "week") {
+
+    const start =
+      new Date(now);
+
+    const day =
+      (start.getDay() + 6) % 7;
+
+    start.setDate(
+      start.getDate() - day
+    );
+
+    start.setHours(0,0,0,0);
+
+    const end =
+      new Date(start);
+
+    end.setDate(
+      end.getDate() + 7
+    );
+
+    return {
+      start,
+      end,
+      title:
+        "Tento týden"
+    };
+  }
+
+
+  if (overviewPeriod === "year") {
+
+    const start =
+      new Date(
+        now.getFullYear(),
+        0,
+        1
+      );
+
+    const end =
+      new Date(
+        now.getFullYear() + 1,
+        0,
+        1
+      );
+
+    return {
+      start,
+      end,
+      title:
+        String(now.getFullYear())
+    };
+  }
+
+
+  const start =
+    new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      1
+    );
+
+  const end =
+    new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      1
+    );
+
+  return {
+    start,
+    end,
+    title:
+      now.toLocaleDateString(
+        "cs-CZ",
+        {
+          month: "long",
+          year: "numeric"
+        }
+      )
+  };
+}
+
+
+/* =========================================================
+   MODALY
+========================================================= */
+
+function openModal(id) {
+
+  document.getElementById(id)
+    .classList.add("open");
+
+  refreshIcons();
+}
+
+
+function closeModal(id) {
+
+  document.getElementById(id)
+    .classList.remove("open");
+}
+
+
+/* =========================================================
+   POMOCNÉ
+========================================================= */
+
+function startOfCalendarGrid(month) {
+
+  const first =
+    new Date(
+      month.getFullYear(),
+      month.getMonth(),
+      1
+    );
+
+  const mondayIndex =
+    (first.getDay() + 6) % 7;
+
+  const start =
+    new Date(first);
+
+  start.setDate(
+    start.getDate() - mondayIndex
+  );
+
+  start.setHours(0,0,0,0);
+
+  return start;
+}
+
+
+function dateKey(date) {
+
+  const d =
+    new Date(date);
+
+  const year =
+    d.getFullYear();
+
+  const month =
+    String(d.getMonth() + 1)
+      .padStart(2,"0");
+
+  const day =
+    String(d.getDate())
+      .padStart(2,"0");
+
+  return `${year}-${month}-${day}`;
+}
+
+
+function parseDateKey(key) {
+
+  const [y,m,d] =
+    key.split("-")
+      .map(Number);
+
+  return new Date(
+    y,
+    m - 1,
+    d
+  );
+}
+
 
 function localDateTime(date) {
 
+  const d =
+    new Date(date);
+
   const pad =
-    n => String(n).padStart(2, "0");
+    n => String(n)
+      .padStart(2,"0");
 
   return (
-    date.getFullYear() + "-" +
-    pad(date.getMonth() + 1) + "-" +
-    pad(date.getDate()) + "T" +
-    pad(date.getHours()) + ":" +
-    pad(date.getMinutes())
+    d.getFullYear() +
+    "-" +
+    pad(d.getMonth()+1) +
+    "-" +
+    pad(d.getDate()) +
+    "T" +
+    pad(d.getHours()) +
+    ":" +
+    pad(d.getMinutes())
   );
 }
 
 
-function formatDateTime(value) {
+function formatOnlyTime(date) {
 
-  return new Date(value).toLocaleString(
-    "cs-CZ",
-    {
-      day: "2-digit",
-      month: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit"
+  return new Date(date)
+    .toLocaleTimeString(
+      "cs-CZ",
+      {
+        hour: "2-digit",
+        minute: "2-digit"
+      }
+    );
+}
+
+
+function formatTime(value) {
+
+  return new Date(value)
+    .toLocaleTimeString(
+      "cs-CZ",
+      {
+        hour: "2-digit",
+        minute: "2-digit"
+      }
+    );
+}
+
+
+function formatHours(hours) {
+
+  const totalMinutes =
+    Math.round(hours * 60);
+
+  const h =
+    Math.floor(totalMinutes / 60);
+
+  const m =
+    totalMinutes % 60;
+
+  if (!m) {
+    return `${h} h`;
+  }
+
+  return `${h} h ${m} min`;
+}
+
+
+function safe(value) {
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+function refreshIcons() {
+
+  setTimeout(() => {
+    if (window.lucide) {
+      lucide.createIcons();
     }
-  );
+  }, 0);
 }
 
 </script>
 
 </body>
-</html>
+  </html>
