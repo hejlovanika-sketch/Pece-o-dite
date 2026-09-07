@@ -11,15 +11,15 @@
 
   <style>
     :root {
-      --bg: #f4f4f4;
+      --bg: #f5f5f5;
       --card: #ffffff;
-      --text: #202020;
-      --muted: #7a7a7a;
-      --line: #e8e8e8;
-      --soft: #f6f6f6;
-      --dark: #242424;
+      --text: #1f1f1f;
+      --muted: #777;
+      --line: #e7e7e7;
+      --soft: #f2f2f2;
+      --dark: #222;
+      --danger: #a50000;
       --danger-bg: #fae9e9;
-      --danger: #a60000;
     }
 
     * {
@@ -30,8 +30,8 @@
       margin: 0;
       min-height: 100%;
       font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
       color: var(--text);
+      background: var(--bg);
     }
 
     button, input, select, textarea {
@@ -42,102 +42,140 @@
       cursor: pointer;
     }
 
-    .app {
-      max-width: 620px;
-      margin: auto;
-      min-height: 100vh;
-      background: #fff;
-      padding-bottom: 88px;
+    .hidden {
+      display: none !important;
     }
 
+    .app {
+      width: min(100%, 620px);
+      min-height: 100vh;
+      margin: auto;
+      background: white;
+      padding-bottom: 82px;
+    }
+
+    /* =============================
+       HLAVIČKA
+    ============================= */
+
     .header {
-      padding: 22px 18px 8px;
-      background: #fff;
-      position: sticky;
-      top: 0;
-      z-index: 20;
+      padding: 18px 18px 5px;
+      background: white;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-sketch {
+      width: 55px;
+      height: 55px;
+      flex: 0 0 55px;
     }
 
     .app-title {
-      font-size: 29px;
-      font-weight: 750;
       margin: 0;
+      font-size: 29px;
+      line-height: 1.05;
+      font-weight: 800;
     }
 
-    .month-header {
-      display: flex;
+    .month-bar {
+      margin-top: 15px;
+      display: grid;
+      grid-template-columns: 44px 1fr 44px;
       align-items: center;
-      justify-content: space-between;
-      margin-top: 18px;
-      gap: 10px;
+      gap: 8px;
     }
 
-    .month-title {
-      font-size: 21px;
-      font-weight: 700;
+    .month-name {
       text-align: center;
-      flex: 1;
+      font-size: 21px;
+      font-weight: 800;
       text-transform: capitalize;
     }
 
-    .icon-btn {
+    .today-link {
+      display: block;
+      margin: 3px auto 0;
+      border: 0;
+      background: transparent;
+      color: #666;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px;
+    }
+
+    .round-btn {
+      border: 0;
       width: 42px;
       height: 42px;
       border-radius: 50%;
-      border: 0;
       background: var(--soft);
-      color: var(--text);
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0;
+      color: #222;
     }
 
-    .today-btn {
-      border: 0;
-      background: transparent;
-      padding: 5px 2px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #555;
+    .round-btn svg {
+      width: 22px;
+      height: 22px;
     }
 
-    .calendar-wrap {
-      padding: 6px 8px 18px;
+    /* =============================
+       KALENDÁŘ
+    ============================= */
+
+    .calendar-area {
+      padding: 7px 12px 20px;
     }
 
     .weekdays {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       text-align: center;
+      padding: 4px 0 7px;
+      color: #777;
       font-size: 12px;
-      color: var(--muted);
-      padding: 6px 0;
-      font-weight: 700;
+      font-weight: 750;
     }
 
     .calendar {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      border-left: 1px solid var(--line);
       border-top: 1px solid var(--line);
-      background: #fff;
+      border-left: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: white;
     }
 
     .day {
-      position: relative;
-      min-height: 82px;
+      min-height: 64px;
+      padding: 5px 4px;
       border-right: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
-      padding: 6px 4px 11px;
+      background: white;
       overflow: hidden;
-      background: #fff;
-      user-select: none;
     }
 
     .day.other-month {
       background: #fafafa;
-      color: #bcbcbc;
+      color: #bbb;
+    }
+
+    .day-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
     }
 
     .day.today .day-number {
@@ -145,66 +183,42 @@
       color: white;
     }
 
-    .day-number {
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
     .day-icons {
+      min-height: 28px;
       display: flex;
       flex-wrap: wrap;
-      gap: 2px;
-      margin-top: 5px;
       align-items: center;
+      gap: 3px;
+      padding-top: 5px;
     }
 
     .day-icons svg {
-      width: 13px;
-      height: 13px;
-      stroke-width: 1.8;
-      color: #303030;
+      width: 14px;
+      height: 14px;
+      color: #222;
+      stroke-width: 1.9;
+    }
+
+    .day.other-month .day-icons svg {
+      color: #aaa;
+    }
+
+    .soccer-icon {
+      width: 14px;
+      height: 14px;
+      color: #222;
+      display: inline-block;
     }
 
     .more-icons {
-      font-size: 10px;
+      font-size: 9px;
       color: #777;
-      margin-left: 1px;
+      font-weight: 700;
     }
 
-    .care-track {
-      position: absolute;
-      height: 7px;
-      left: 3px;
-      right: 3px;
-      bottom: 3px;
-      border-radius: 5px;
-      background: #f0f0f0;
-      overflow: hidden;
-    }
-
-    .care-segment {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      min-width: 2px;
-    }
-
-    .planned-segment {
-      opacity: .4;
-      background-image: repeating-linear-gradient(
-        45deg,
-        rgba(255,255,255,.8),
-        rgba(255,255,255,.8) 2px,
-        transparent 2px,
-        transparent 4px
-      );
-    }
+    /* =============================
+       OBRAZOVKY
+    ============================= */
 
     .screen {
       display: none;
@@ -215,36 +229,40 @@
     }
 
     .content {
-      padding: 14px 16px 25px;
+      padding: 13px 15px 25px;
     }
 
     .card {
-      background: var(--card);
-      border-radius: 18px;
+      background: white;
       border: 1px solid var(--line);
-      padding: 17px;
-      margin-bottom: 14px;
+      border-radius: 17px;
+      padding: 16px;
+      margin-bottom: 13px;
     }
 
     .card-title {
-      font-size: 18px;
-      font-weight: 750;
       margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 800;
     }
+
+    /* =============================
+       SPODNÍ MENU
+    ============================= */
 
     .bottom-nav {
       position: fixed;
+      bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      bottom: 0;
       width: min(620px, 100%);
-      min-height: 70px;
+      min-height: 68px;
       padding: 7px 8px max(7px, env(safe-area-inset-bottom));
-      background: rgba(255,255,255,.96);
-      border-top: 1px solid var(--line);
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      z-index: 60;
+      background: rgba(255,255,255,.97);
+      border-top: 1px solid var(--line);
+      z-index: 50;
       backdrop-filter: blur(12px);
     }
 
@@ -257,8 +275,7 @@
       align-items: center;
       gap: 4px;
       font-size: 11px;
-      font-weight: 650;
-      padding: 4px;
+      font-weight: 700;
     }
 
     .nav-btn.active {
@@ -270,12 +287,16 @@
       height: 22px;
     }
 
+    /* =============================
+       MODALY
+    ============================= */
+
     .modal {
+      display: none;
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,.42);
       z-index: 100;
-      display: none;
       align-items: flex-end;
       justify-content: center;
     }
@@ -286,53 +307,56 @@
 
     .modal-box {
       width: min(620px, 100%);
-      max-height: 92vh;
+      max-height: 93vh;
       overflow-y: auto;
-      background: #fff;
+      background: white;
+      padding: 8px 18px 28px;
       border-radius: 24px 24px 0 0;
-      padding: 10px 18px 28px;
-      box-shadow: 0 -10px 30px rgba(0,0,0,.12);
     }
 
     .modal-grip {
-      width: 44px;
+      width: 42px;
       height: 5px;
       background: #ddd;
       border-radius: 10px;
       margin: 3px auto 15px;
     }
 
-    .modal-top {
+    .modal-head {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       gap: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 13px;
     }
 
     .modal-title {
-      font-size: 23px;
-      font-weight: 750;
       margin: 0;
+      font-size: 22px;
+      font-weight: 800;
       text-transform: capitalize;
     }
 
     .close-btn {
-      border: 0;
-      background: var(--soft);
       width: 38px;
       height: 38px;
+      border: 0;
       border-radius: 50%;
+      background: var(--soft);
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
     }
+
+    /* =============================
+       DETAIL DNE
+    ============================= */
 
     .day-event {
       display: flex;
-      gap: 12px;
+      gap: 11px;
       align-items: flex-start;
-      padding: 13px 0;
+      padding: 12px 0;
       border-bottom: 1px solid var(--line);
     }
 
@@ -341,20 +365,25 @@
     }
 
     .event-icon {
-      width: 35px;
-      height: 35px;
+      width: 37px;
+      height: 37px;
       border-radius: 50%;
-      background: #f3f3f3;
+      background: #f4f4f4;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex: 0 0 35px;
+      flex: 0 0 37px;
     }
 
     .event-icon svg {
-      width: 19px;
-      height: 19px;
+      width: 20px;
+      height: 20px;
       color: #222;
+    }
+
+    .event-icon .soccer-icon {
+      width: 21px;
+      height: 21px;
     }
 
     .event-main {
@@ -363,15 +392,15 @@
     }
 
     .event-name {
-      font-weight: 750;
       font-size: 16px;
+      font-weight: 800;
     }
 
     .event-meta {
-      color: var(--muted);
-      font-size: 13px;
       margin-top: 4px;
-      line-height: 1.35;
+      color: #707070;
+      font-size: 13px;
+      line-height: 1.4;
     }
 
     .empty {
@@ -384,15 +413,110 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
-      margin-top: 14px;
+      margin-top: 13px;
+    }
+
+    .secret-toggle-wrap {
+      text-align: center;
+      margin-top: 13px;
+      padding-top: 6px;
+      border-top: 1px solid var(--line);
+    }
+
+    .secret-toggle {
+      width: 52px;
+      height: 39px;
+      border: 0;
+      background: transparent;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      color: #555;
+    }
+
+    .secret-toggle svg {
+      width: 27px;
+      height: 27px;
+    }
+
+    .secret-section {
+      display: none;
+      padding-top: 7px;
+    }
+
+    .secret-section.open {
+      display: block;
+    }
+
+    .secret-subtitle {
+      font-size: 13px;
+      color: #888;
+      font-weight: 700;
+      margin: 12px 0 7px;
+    }
+
+    .care-row {
+      padding: 10px 11px;
+      margin-bottom: 7px;
+      border-left: 5px solid #aaa;
+      border-radius: 10px;
+      background: #f7f7f7;
+    }
+
+    .care-person {
+      font-weight: 800;
+    }
+
+    .care-meta {
+      margin-top: 3px;
+      color: #666;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .companion-row {
+      background: #f7f7f7;
+      border-radius: 10px;
+      padding: 10px 11px;
+      margin-bottom: 7px;
+      font-size: 14px;
+    }
+
+    /* =============================
+       FORM
+    ============================= */
+
+    label {
+      display: block;
+      margin: 0 0 5px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #d5d5d5;
+      border-radius: 11px;
+      background: white;
+      padding: 12px;
+      margin-bottom: 13px;
+      font-size: 16px;
+      color: #222;
+    }
+
+    textarea {
+      min-height: 86px;
+      resize: vertical;
     }
 
     .btn {
       border: 0;
-      border-radius: 13px;
+      border-radius: 12px;
       padding: 13px;
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .btn-dark {
@@ -401,7 +525,7 @@
     }
 
     .btn-soft {
-      background: #f1f1f1;
+      background: #efefef;
       color: #222;
     }
 
@@ -410,120 +534,137 @@
       color: var(--danger);
     }
 
-    .three-lines-wrap {
-      margin-top: 14px;
-      padding-top: 8px;
-      border-top: 1px solid var(--line);
-      text-align: center;
+    /* =============================
+       VÝBĚR TYPU AKCE
+    ============================= */
+
+    .activity-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 15px;
     }
 
-    .three-lines {
+    .activity-choice {
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 12px;
+      min-height: 82px;
+      padding: 9px 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .activity-choice.active {
+      border: 2px solid #222;
+      padding: 8px 4px;
+      background: #f7f7f7;
+    }
+
+    .activity-choice svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .activity-choice .soccer-icon {
+      width: 25px;
+      height: 25px;
+    }
+
+    /* =============================
+       OPAKOVÁNÍ
+    ============================= */
+
+    .repeat-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      background: #efefef;
+      border-radius: 11px;
+      padding: 3px;
+      margin-bottom: 15px;
+    }
+
+    .repeat-switch button {
       border: 0;
       background: transparent;
-      width: 50px;
-      height: 38px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      border-radius: 9px;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 750;
+      color: #666;
+    }
+
+    .repeat-switch button.active {
+      background: #222;
+      color: white;
+    }
+
+    .repeat-panel {
+      display: none;
+    }
+
+    .repeat-panel.open {
+      display: block;
+    }
+
+    .weekday-picker {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      margin-bottom: 14px;
+    }
+
+    .weekday-btn {
+      border: 1px solid #ddd;
+      border-radius: 50%;
+      background: white;
+      aspect-ratio: 1/1;
+      font-size: 11px;
+      font-weight: 800;
       color: #555;
     }
 
-    .three-lines svg {
-      width: 27px;
-      height: 27px;
+    .weekday-btn.active {
+      background: #222;
+      color: white;
+      border-color: #222;
     }
 
-    .care-details {
-      display: none;
-      margin-top: 8px;
-    }
-
-    .care-details.open {
-      display: block;
-    }
-
-    .care-row {
-      border-left: 5px solid #bbb;
-      background: #f7f7f7;
-      border-radius: 10px;
-      padding: 10px 11px;
-      margin-bottom: 8px;
-      cursor: pointer;
-    }
-
-    .care-person {
-      font-weight: 750;
-    }
-
-    .care-meta {
-      color: #666;
-      font-size: 13px;
-      margin-top: 3px;
-    }
-
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 750;
-      margin-bottom: 5px;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      border: 1px solid #d6d6d6;
-      border-radius: 11px;
-      padding: 12px;
-      margin-bottom: 14px;
-      background: white;
-      color: #222;
-      font-size: 16px;
-    }
-
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .person-chip-list {
+    .two-cols {
       display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 9px;
     }
 
-    .person-chip {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 11px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-    }
-
-    .person-dot {
-      width: 15px;
-      height: 15px;
-      border-radius: 50%;
-      flex: 0 0 15px;
-    }
+    /* =============================
+       PŘEHLED
+    ============================= */
 
     .overview-tabs {
-      display: flex;
-      gap: 6px;
-      padding: 0 0 15px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      padding: 3px;
+      background: #efefef;
+      border-radius: 11px;
+      margin-bottom: 14px;
     }
 
     .overview-tab {
-      flex: 1;
-      padding: 10px 5px;
       border: 0;
-      border-radius: 10px;
-      background: #efefef;
+      border-radius: 9px;
+      background: transparent;
+      padding: 9px 5px;
       color: #666;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .overview-tab.active {
@@ -531,11 +672,55 @@
       color: white;
     }
 
+    .overview-item {
+      display: grid;
+      grid-template-columns: 35px 1fr auto;
+      align-items: center;
+      gap: 9px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .overview-item:last-child {
+      border-bottom: 0;
+    }
+
+    .overview-item-icon {
+      width: 31px;
+      height: 31px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .overview-item-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .overview-item-icon .soccer-icon {
+      width: 21px;
+      height: 21px;
+    }
+
+    .overview-count {
+      font-weight: 800;
+    }
+
+    .overview-secret {
+      display: none;
+      margin-top: 8px;
+    }
+
+    .overview-secret.open {
+      display: block;
+    }
+
     .stat-row {
       display: grid;
       grid-template-columns: 1fr auto;
-      gap: 12px;
-      padding: 11px 0;
+      gap: 10px;
+      padding: 10px 0;
       border-bottom: 1px solid var(--line);
     }
 
@@ -543,69 +728,91 @@
       border-bottom: 0;
     }
 
-    .stat-name {
+    .stat-person {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-weight: 650;
+      font-weight: 700;
     }
 
-    .stat-value {
-      font-weight: 750;
+    .person-dot {
+      width: 14px;
+      height: 14px;
+      flex: 0 0 14px;
+      border-radius: 50%;
     }
 
-    .activity-stat {
+    .small {
+      color: #777;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    /* =============================
+       NASTAVENÍ
+    ============================= */
+
+    .people-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .person-item {
       display: flex;
       align-items: center;
       gap: 9px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
     }
 
-    .activity-stat svg {
-      width: 17px;
-      height: 17px;
-    }
+    /* =============================
+       LOGIN
+    ============================= */
 
     .login-wrap {
       padding: 50px 18px;
     }
 
     .login-card {
-      max-width: 430px;
+      max-width: 420px;
       margin: auto;
-      padding: 24px;
+      background: white;
+      padding: 23px;
+      border-radius: 20px;
       border: 1px solid var(--line);
-      border-radius: 22px;
-      background: #fff;
     }
 
     .login-title {
-      font-size: 27px;
       margin: 0 0 20px;
+      font-size: 27px;
     }
 
     .message {
       margin-top: 10px;
-      padding: 10px;
-      border-radius: 10px;
       background: #f1f1f1;
+      border-radius: 10px;
+      padding: 10px;
       font-size: 14px;
     }
 
-    .settings-title {
-      margin: 2px 0 18px;
-      font-size: 25px;
-    }
-
-    @media (max-width: 390px) {
+    @media (max-width: 380px) {
       .day {
-        min-height: 75px;
-        padding-left: 3px;
-        padding-right: 3px;
+        min-height: 59px;
       }
 
-      .day-icons svg {
-        width: 12px;
-        height: 12px;
+      .app-title {
+        font-size: 26px;
+      }
+
+      .brand-sketch {
+        width: 49px;
+        height: 49px;
+        flex-basis: 49px;
+      }
+
+      .activity-choice {
+        min-height: 78px;
       }
     }
   </style>
@@ -615,9 +822,11 @@
 
 <div class="app">
 
-  <!-- PŘIHLÁŠENÍ -->
+  <!-- LOGIN -->
   <div id="loginScreen" class="login-wrap">
+
     <div class="login-card">
+
       <h1 class="login-title">Davídkův kalendář</h1>
 
       <label>E-mail</label>
@@ -631,35 +840,60 @@
       </button>
 
       <div id="loginMessage"></div>
+
     </div>
+
   </div>
 
-  <!-- APP -->
+
   <div id="mainApp" class="hidden">
 
     <!-- KALENDÁŘ -->
     <section id="calendarScreen" class="screen active">
 
       <div class="header">
-        <h1 class="app-title">Davídkův kalendář</h1>
 
-        <div class="month-header">
-          <button class="icon-btn" onclick="changeMonth(-1)">
+        <div class="brand">
+
+          <svg class="brand-sketch" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M25 14c5-6 14-6 19 0"/>
+            <circle cx="35" cy="22" r="9"/>
+            <path d="M29 31l-8 18m20-18 8 17M31 32l-3 18m11-18 4 18"/>
+            <path d="M28 49 17 62m26-13 13 12"/>
+            <path d="M16 62l-8 2m48-3 7 3"/>
+            <path d="M26 35c6 4 12 4 17 0"/>
+            <circle cx="59" cy="59" r="10"/>
+            <path d="m59 49 4 4-1 5-6 1-4-4 2-5z"/>
+            <path d="m62 58 6 3m-12-2-3 7m1-11-6-1"/>
+          </svg>
+
+          <h1 class="app-title">Davídkův<br>kalendář</h1>
+
+        </div>
+
+        <div class="month-bar">
+
+          <button class="round-btn" onclick="changeMonth(-1)">
             <i data-lucide="chevron-left"></i>
           </button>
 
           <div>
-            <div id="monthTitle" class="month-title"></div>
-            <button class="today-btn" onclick="goToday()">Dnes</button>
+            <div id="monthTitle" class="month-name"></div>
+
+            <button class="today-link" onclick="goToday()">
+              Dnes
+            </button>
           </div>
 
-          <button class="icon-btn" onclick="changeMonth(1)">
+          <button class="round-btn" onclick="changeMonth(1)">
             <i data-lucide="chevron-right"></i>
           </button>
+
         </div>
+
       </div>
 
-      <div class="calendar-wrap">
+      <div class="calendar-area">
 
         <div class="weekdays">
           <div>Po</div>
@@ -688,32 +922,54 @@
       <div class="content">
 
         <div class="overview-tabs">
-          <button class="overview-tab" data-period="week" onclick="setOverviewPeriod('week')">
+
+          <button class="overview-tab" data-period="week"
+            onclick="setOverviewPeriod('week')">
             Týden
           </button>
 
-          <button class="overview-tab active" data-period="month" onclick="setOverviewPeriod('month')">
+          <button class="overview-tab active" data-period="month"
+            onclick="setOverviewPeriod('month')">
             Měsíc
           </button>
 
-          <button class="overview-tab" data-period="year" onclick="setOverviewPeriod('year')">
+          <button class="overview-tab" data-period="year"
+            onclick="setOverviewPeriod('year')">
             Rok
           </button>
+
         </div>
 
         <div class="card">
-          <h2 class="card-title" id="overviewRangeTitle"></h2>
-          <div id="careStats"></div>
+
+          <h2 id="overviewTitle" class="card-title"></h2>
+
+          <div id="overviewActivities"></div>
+
         </div>
 
-        <div class="card">
-          <h2 class="card-title">Doprovod a akce</h2>
-          <div id="activityStats"></div>
+        <div class="secret-toggle-wrap">
+
+          <button class="secret-toggle" onclick="toggleOverviewSecret()">
+            <i data-lucide="menu"></i>
+          </button>
+
         </div>
 
-        <div class="card">
-          <h2 class="card-title">Škola</h2>
-          <div id="schoolStats"></div>
+        <div id="overviewSecret" class="overview-secret">
+
+          <div class="card">
+
+            <div id="careStats"></div>
+
+          </div>
+
+          <div class="card">
+
+            <div id="companionStats"></div>
+
+          </div>
+
         </div>
 
       </div>
@@ -731,20 +987,26 @@
       <div class="content">
 
         <div class="card">
-          <h2 class="settings-title">Osoby</h2>
 
-          <div id="peopleList" class="person-chip-list"></div>
+          <h2 class="card-title">Osoby</h2>
 
-          <button class="btn btn-soft" style="width:100%;margin-top:14px"
+          <div id="peopleList" class="people-list"></div>
+
+          <button
+            class="btn btn-soft"
+            style="width:100%;margin-top:13px"
             onclick="openPersonModal()">
             + Přidat osobu
           </button>
+
         </div>
 
         <div class="card">
+
           <button class="btn btn-soft" style="width:100%" onclick="logout()">
             Odhlásit
           </button>
+
         </div>
 
       </div>
@@ -752,23 +1014,20 @@
     </section>
 
 
-    <!-- SPODNÍ MENU -->
+    <!-- NAV -->
     <nav class="bottom-nav">
 
-      <button class="nav-btn active" data-screen="calendarScreen"
-        onclick="showScreen('calendarScreen', this)">
+      <button class="nav-btn active" onclick="showScreen('calendarScreen',this)">
         <i data-lucide="calendar-days"></i>
         Kalendář
       </button>
 
-      <button class="nav-btn" data-screen="overviewScreen"
-        onclick="showScreen('overviewScreen', this)">
+      <button class="nav-btn" onclick="showScreen('overviewScreen',this)">
         <i data-lucide="chart-no-axes-column"></i>
         Přehled
       </button>
 
-      <button class="nav-btn" data-screen="settingsScreen"
-        onclick="showScreen('settingsScreen', this)">
+      <button class="nav-btn" onclick="showScreen('settingsScreen',this)">
         <i data-lucide="settings"></i>
         Nastavení
       </button>
@@ -782,19 +1041,21 @@
 
 <!-- DETAIL DNE -->
 <div id="dayModal" class="modal">
+
   <div class="modal-box">
 
     <div class="modal-grip"></div>
 
-    <div class="modal-top">
+    <div class="modal-head">
+
       <h2 id="dayModalTitle" class="modal-title"></h2>
 
       <button class="close-btn" onclick="closeModal('dayModal')">
         <i data-lucide="x"></i>
       </button>
+
     </div>
 
-    <!-- HLAVNĚ AKCE -->
     <div id="dayEvents"></div>
 
     <div class="day-actions">
@@ -809,18 +1070,21 @@
 
     </div>
 
-    <!-- JEN TŘI ČÁRKY -->
-    <div class="three-lines-wrap">
+    <div class="secret-toggle-wrap">
 
-      <button class="three-lines" onclick="toggleCareDetails()">
+      <button class="secret-toggle" onclick="toggleDaySecret()">
         <i data-lucide="menu"></i>
       </button>
 
-      <div id="careDetails" class="care-details">
+      <div id="daySecret" class="secret-section">
 
         <div id="dayCareList"></div>
 
-        <button class="btn btn-soft" style="width:100%;margin-top:5px"
+        <div id="dayCompanionList"></div>
+
+        <button
+          class="btn btn-soft"
+          style="width:100%;margin-top:7px"
           onclick="openCareModal()">
           + Přidat
         </button>
@@ -830,44 +1094,108 @@
     </div>
 
   </div>
+
 </div>
 
 
 <!-- AKCE -->
 <div id="activityModal" class="modal">
+
   <div class="modal-box">
 
     <div class="modal-grip"></div>
 
-    <div class="modal-top">
-      <h2 id="activityModalTitle" class="modal-title">Přidat akci</h2>
+    <div class="modal-head">
+
+      <h2 id="activityModalTitle" class="modal-title">
+        Přidat akci
+      </h2>
 
       <button class="close-btn" onclick="closeModal('activityModal')">
         <i data-lucide="x"></i>
       </button>
+
     </div>
 
     <label>Typ akce</label>
 
-    <select id="activityType">
-      <option value="Fotbal">Fotbal</option>
-      <option value="Atletika">Atletika</option>
-      <option value="Závody – atletika">Závody – atletika</option>
-      <option value="Turnaj – fotbal">Turnaj – fotbal</option>
-      <option value="Narozeniny / oslava">Narozeniny / oslava</option>
-      <option value="Lékař">Lékař</option>
-      <option value="Výlet">Výlet</option>
-      <option value="Školní akce">Školní akce</option>
-      <option value="Jiné">Jiné</option>
-    </select>
+    <div id="activityTypeGrid" class="activity-grid"></div>
 
-    <label>Od</label>
-    <input id="activityStart" type="datetime-local">
+    <div class="repeat-switch">
 
-    <label>Do</label>
-    <input id="activityEnd" type="datetime-local">
+      <button id="singleBtn" class="active" onclick="setRepeatMode(false)">
+        Jednorázově
+      </button>
+
+      <button id="repeatBtn" onclick="setRepeatMode(true)">
+        Opakovat
+      </button>
+
+    </div>
+
+
+    <!-- JEDNORÁZOVÁ -->
+    <div id="singleActivityPanel">
+
+      <label>Od</label>
+      <input id="activityStart" type="datetime-local">
+
+      <label>Do</label>
+      <input id="activityEnd" type="datetime-local">
+
+    </div>
+
+
+    <!-- OPAKOVÁNÍ -->
+    <div id="repeatActivityPanel" class="repeat-panel">
+
+      <label>Dny v týdnu</label>
+
+      <div class="weekday-picker">
+
+        <button class="weekday-btn" data-day="1" onclick="toggleWeekday(this)">Po</button>
+        <button class="weekday-btn" data-day="2" onclick="toggleWeekday(this)">Út</button>
+        <button class="weekday-btn" data-day="3" onclick="toggleWeekday(this)">St</button>
+        <button class="weekday-btn" data-day="4" onclick="toggleWeekday(this)">Čt</button>
+        <button class="weekday-btn" data-day="5" onclick="toggleWeekday(this)">Pá</button>
+        <button class="weekday-btn" data-day="6" onclick="toggleWeekday(this)">So</button>
+        <button class="weekday-btn" data-day="0" onclick="toggleWeekday(this)">Ne</button>
+
+      </div>
+
+      <div class="two-cols">
+
+        <div>
+          <label>Platnost od</label>
+          <input id="repeatFromDate" type="date">
+        </div>
+
+        <div>
+          <label>Do</label>
+          <input id="repeatToDate" type="date">
+        </div>
+
+      </div>
+
+      <div class="two-cols">
+
+        <div>
+          <label>Čas od</label>
+          <input id="repeatStartTime" type="time">
+        </div>
+
+        <div>
+          <label>Čas do</label>
+          <input id="repeatEndTime" type="time">
+        </div>
+
+      </div>
+
+    </div>
+
 
     <label>Doprovod</label>
+
     <select id="activityCompanion">
       <option value="">Neuvedeno</option>
     </select>
@@ -882,7 +1210,8 @@
       Uložit
     </button>
 
-    <button id="deleteActivityBtn"
+    <button
+      id="deleteActivityBtn"
       class="btn btn-danger hidden"
       style="width:100%;margin-top:8px"
       onclick="deleteActivity()">
@@ -890,21 +1219,27 @@
     </button>
 
   </div>
+
 </div>
 
 
 <!-- PÉČE -->
 <div id="careModal" class="modal">
+
   <div class="modal-box">
 
     <div class="modal-grip"></div>
 
-    <div class="modal-top">
-      <h2 id="careModalTitle" class="modal-title">Přidat</h2>
+    <div class="modal-head">
+
+      <h2 id="careModalTitle" class="modal-title">
+        Přidat
+      </h2>
 
       <button class="close-btn" onclick="closeModal('careModal')">
         <i data-lucide="x"></i>
       </button>
+
     </div>
 
     <label>Osoba</label>
@@ -917,6 +1252,7 @@
     <input id="careEnd" type="datetime-local">
 
     <label>Záznam</label>
+
     <select id="careRecordType">
       <option value="actual">Skutečnost</option>
       <option value="planned">Plán</option>
@@ -929,7 +1265,8 @@
       Uložit
     </button>
 
-    <button id="deleteCareBtn"
+    <button
+      id="deleteCareBtn"
       class="btn btn-danger hidden"
       style="width:100%;margin-top:8px"
       onclick="deleteCare()">
@@ -937,21 +1274,25 @@
     </button>
 
   </div>
+
 </div>
 
 
 <!-- ŠKOLA -->
 <div id="schoolModal" class="modal">
+
   <div class="modal-box">
 
     <div class="modal-grip"></div>
 
-    <div class="modal-top">
+    <div class="modal-head">
+
       <h2 class="modal-title">Škola</h2>
 
       <button class="close-btn" onclick="closeModal('schoolModal')">
         <i data-lucide="x"></i>
       </button>
+
     </div>
 
     <label>Co</label>
@@ -975,26 +1316,29 @@
     </button>
 
   </div>
+
 </div>
 
 
 <!-- OSOBA -->
 <div id="personModal" class="modal">
+
   <div class="modal-box">
 
     <div class="modal-grip"></div>
 
-    <div class="modal-top">
+    <div class="modal-head">
+
       <h2 class="modal-title">Přidat osobu</h2>
 
       <button class="close-btn" onclick="closeModal('personModal')">
         <i data-lucide="x"></i>
       </button>
+
     </div>
 
     <label>Název</label>
-    <input id="personName" type="text"
-      placeholder="Máma, Táta, Babička Bezděz...">
+    <input id="personName" type="text">
 
     <label>Barva</label>
     <input id="personColor" type="color" value="#e85d75">
@@ -1004,14 +1348,15 @@
     </button>
 
   </div>
+
 </div>
 
 
 <script>
 
-/* =========================================================
+/* =====================================================
    SUPABASE
-========================================================= */
+===================================================== */
 
 const SUPABASE_URL =
   "https://xfuhiajigonazdrzzlvm.supabase.co";
@@ -1019,24 +1364,29 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
   "sb_publishable_drYLPns62-EE8-Mtz9WS8w_z7Vm6YFd";
 
-const db = supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const db =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
 
-/* =========================================================
+/* =====================================================
    STAV
-========================================================= */
+===================================================== */
 
 let currentUser = null;
 
-let currentMonth = new Date();
+let currentMonth =
+  new Date();
+
 currentMonth.setDate(1);
 
-let selectedDate = dateKey(new Date());
+let selectedDate =
+  dateKey(new Date());
 
 let people = [];
+
 let monthCare = [];
 let monthActivities = [];
 let monthSchool = [];
@@ -1044,38 +1394,90 @@ let monthSchool = [];
 let editingCareId = null;
 let editingActivityId = null;
 
+let selectedActivityType = "Fotbal";
+
+let repeatMode = false;
+
 let overviewPeriod = "month";
 
 
-/* =========================================================
-   IKONY – ČERNOBÍLÉ
-========================================================= */
+/* =====================================================
+   TYPY AKCÍ
+===================================================== */
 
-const activityIcons = {
-  "Fotbal": "circle-dot",
-  "Atletika": "person-standing",
-  "Závody – atletika": "medal",
-  "Turnaj – fotbal": "trophy",
-  "Narozeniny / oslava": "cake-slice",
-  "Lékař": "stethoscope",
-  "Výlet": "heart",
-  "Školní akce": "backpack",
-  "Jiné": "calendar-heart"
-};
+const activityTypes = [
+
+  {
+    name: "Fotbal",
+    icon: "soccer"
+  },
+
+  {
+    name: "Atletika",
+    icon: "person-standing"
+  },
+
+  {
+    name: "Závody – atletika",
+    icon: "medal"
+  },
+
+  {
+    name: "Turnaj – fotbal",
+    icon: "trophy"
+  },
+
+  {
+    name: "Narozeniny / oslava",
+    icon: "cake-slice"
+  },
+
+  {
+    name: "Lékař",
+    icon: "stethoscope"
+  },
+
+  {
+    name: "Nemoc",
+    icon: "thermometer"
+  },
+
+  {
+    name: "Výlet",
+    icon: "heart"
+  },
+
+  {
+    name: "Školní akce",
+    icon: "backpack"
+  },
+
+  {
+    name: "Jiné",
+    icon: "ellipsis"
+  }
+
+];
 
 
-/* =========================================================
+/* =====================================================
    START
-========================================================= */
+===================================================== */
 
 async function startApp() {
 
+  renderActivityChoices();
+
   const {
     data: { session }
-  } = await db.auth.getSession();
+  } =
+    await db.auth.getSession();
 
   if (session) {
-    currentUser = session.user;
+
+    currentUser =
+      session.user;
+
     await enterApp();
   }
 
@@ -1085,20 +1487,26 @@ async function startApp() {
 startApp();
 
 
-/* =========================================================
+/* =====================================================
    LOGIN
-========================================================= */
+===================================================== */
 
 async function login() {
 
   const email =
-    document.getElementById("loginEmail").value.trim();
+    document
+      .getElementById("loginEmail")
+      .value
+      .trim();
 
   const password =
-    document.getElementById("loginPassword").value;
+    document
+      .getElementById("loginPassword")
+      .value;
 
   const message =
-    document.getElementById("loginMessage");
+    document
+      .getElementById("loginMessage");
 
   message.innerHTML =
     `<div class="message">Přihlašuji…</div>`;
@@ -1110,12 +1518,17 @@ async function login() {
     });
 
   if (error) {
+
     message.innerHTML =
-      `<div class="message">Chyba: ${safe(error.message)}</div>`;
+      `<div class="message">
+        Chyba: ${safe(error.message)}
+      </div>`;
+
     return;
   }
 
-  currentUser = data.user;
+  currentUser =
+    data.user;
 
   message.innerHTML = "";
 
@@ -1129,45 +1542,67 @@ async function logout() {
 
   currentUser = null;
 
-  document.getElementById("mainApp")
-    .classList.add("hidden");
+  document
+    .getElementById("mainApp")
+    .classList
+    .add("hidden");
 
-  document.getElementById("loginScreen")
-    .classList.remove("hidden");
+  document
+    .getElementById("loginScreen")
+    .classList
+    .remove("hidden");
 }
 
 
 async function enterApp() {
 
-  document.getElementById("loginScreen")
-    .classList.add("hidden");
+  document
+    .getElementById("loginScreen")
+    .classList
+    .add("hidden");
 
-  document.getElementById("mainApp")
-    .classList.remove("hidden");
+  document
+    .getElementById("mainApp")
+    .classList
+    .remove("hidden");
 
   await loadPeople();
+
   await loadMonthData();
 }
 
 
-/* =========================================================
+/* =====================================================
    OBRAZOVKY
-========================================================= */
+===================================================== */
 
-function showScreen(screenId, button) {
+function showScreen(id, button) {
 
-  document.querySelectorAll(".screen")
-    .forEach(x => x.classList.remove("active"));
+  document
+    .querySelectorAll(".screen")
+    .forEach(
+      el =>
+        el.classList.remove("active")
+    );
 
-  document.getElementById(screenId)
-    .classList.add("active");
+  document
+    .getElementById(id)
+    .classList
+    .add("active");
 
-  document.querySelectorAll(".nav-btn")
-    .forEach(x => x.classList.remove("active"));
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach(
+      el =>
+        el.classList.remove("active")
+    );
 
-  button.classList.add("active");
+  button
+    .classList
+    .add("active");
 
-  if (screenId === "overviewScreen") {
+  if (id === "overviewScreen") {
+
     renderOverview();
   }
 
@@ -1175,15 +1610,18 @@ function showScreen(screenId, button) {
 }
 
 
-/* =========================================================
-   MĚSÍC
-========================================================= */
+/* =====================================================
+   KALENDÁŘ
+===================================================== */
 
 function changeMonth(diff) {
 
-  currentMonth.setMonth(
-    currentMonth.getMonth() + diff
-  );
+  currentMonth =
+    new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() + diff,
+      1
+    );
 
   loadMonthData();
 }
@@ -1191,7 +1629,9 @@ function changeMonth(diff) {
 
 function goToday() {
 
-  currentMonth = new Date();
+  currentMonth =
+    new Date();
+
   currentMonth.setDate(1);
 
   loadMonthData();
@@ -1200,86 +1640,106 @@ function goToday() {
 
 async function loadMonthData() {
 
-  const start =
-    new Date(
-      currentMonth.getFullYear(),
-      currentMonth.getMonth(),
-      1
+  const gridStart =
+    startOfCalendarGrid(
+      currentMonth
     );
 
-  const gridStart = startOfCalendarGrid(start);
-
   const gridEnd =
-    new Date(gridStart);
-
-  gridEnd.setDate(gridEnd.getDate() + 42);
+    endOfCalendarGrid(
+      currentMonth
+    );
 
   const [
     careResult,
     activityResult,
     schoolResult
-  ] = await Promise.all([
+  ] =
+    await Promise.all([
 
-    db
-      .from("care_periods")
-      .select(`
-        *,
-        people (
-          id,
-          name,
-          color
+      db
+        .from("care_periods")
+        .select(`
+          *,
+          people (
+            id,
+            name,
+            color
+          )
+        `)
+        .lt(
+          "start_at",
+          gridEnd.toISOString()
         )
-      `)
-      .lt("start_at", gridEnd.toISOString())
-      .gt("end_at", gridStart.toISOString()),
+        .gt(
+          "end_at",
+          gridStart.toISOString()
+        ),
 
-    db
-      .from("activities")
-      .select(`
-        *,
-        people:companion_person_id (
-          id,
-          name,
-          color
+      db
+        .from("activities")
+        .select(`
+          *,
+          people:companion_person_id (
+            id,
+            name,
+            color
+          )
+        `)
+        .gte(
+          "start_at",
+          gridStart.toISOString()
         )
-      `)
-      .gte("start_at", gridStart.toISOString())
-      .lt("start_at", gridEnd.toISOString()),
+        .lt(
+          "start_at",
+          gridEnd.toISOString()
+        ),
 
-    db
-      .from("school_events")
-      .select(`
-        *,
-        people (
-          id,
-          name,
-          color
+      db
+        .from("school_events")
+        .select(`
+          *,
+          people (
+            id,
+            name,
+            color
+          )
+        `)
+        .gte(
+          "event_date",
+          dateKey(gridStart)
         )
-      `)
-      .gte("event_date", dateKey(gridStart))
-      .lt("event_date", dateKey(gridEnd))
-  ]);
+        .lt(
+          "event_date",
+          dateKey(gridEnd)
+        )
 
-  monthCare = careResult.data || [];
-  monthActivities = activityResult.data || [];
-  monthSchool = schoolResult.data || [];
+    ]);
 
-  document.getElementById("monthTitle").textContent =
-    currentMonth.toLocaleDateString(
-      "cs-CZ",
-      {
-        month: "long",
-        year: "numeric"
-      }
-    );
+  monthCare =
+    careResult.data || [];
+
+  monthActivities =
+    activityResult.data || [];
+
+  monthSchool =
+    schoolResult.data || [];
+
+  document
+    .getElementById("monthTitle")
+    .textContent =
+      currentMonth
+        .toLocaleDateString(
+          "cs-CZ",
+          {
+            month: "long",
+            year: "numeric"
+          }
+        );
 
   renderCalendar();
 }
 
-
-/* =========================================================
-   KALENDÁŘ
-========================================================= */
 
 function renderCalendar() {
 
@@ -1289,14 +1749,37 @@ function renderCalendar() {
   calendar.innerHTML = "";
 
   const gridStart =
-    startOfCalendarGrid(currentMonth);
+    startOfCalendarGrid(
+      currentMonth
+    );
 
-  for (let i = 0; i < 42; i++) {
+  const gridEnd =
+    endOfCalendarGrid(
+      currentMonth
+    );
+
+  const days =
+    Math.round(
+      (
+        gridEnd.getTime() -
+        gridStart.getTime()
+      )
+      /
+      86400000
+    );
+
+  for (
+    let i = 0;
+    i < days;
+    i++
+  ) {
 
     const day =
       new Date(gridStart);
 
-    day.setDate(gridStart.getDate() + i);
+    day.setDate(
+      gridStart.getDate() + i
+    );
 
     const key =
       dateKey(day);
@@ -1310,175 +1793,96 @@ function renderCalendar() {
       day.getMonth() !==
       currentMonth.getMonth()
     ) {
-      cell.classList.add("other-month");
+
+      cell
+        .classList
+        .add("other-month");
     }
 
-    if (key === dateKey(new Date())) {
-      cell.classList.add("today");
+    if (
+      key ===
+      dateKey(new Date())
+    ) {
+
+      cell
+        .classList
+        .add("today");
     }
 
-    cell.onclick = () =>
-      openDay(key);
+    cell.onclick =
+      () => openDay(key);
 
 
     const number =
       document.createElement("div");
 
-    number.className = "day-number";
-    number.textContent = day.getDate();
+    number.className =
+      "day-number";
+
+    number.textContent =
+      day.getDate();
 
     cell.appendChild(number);
 
 
-    /* AKCE */
     const activities =
-      monthActivities.filter(
-        x =>
-          dateKey(new Date(x.start_at)) === key
-      );
-
-    const school =
-      monthSchool.filter(
-        x => x.event_date === key
-      );
-
-    if (activities.length || school.length) {
-
-      const icons =
-        document.createElement("div");
-
-      icons.className = "day-icons";
-
-      const visibleActivities =
-        activities.slice(0, 4);
-
-      visibleActivities.forEach(activity => {
-
-        const icon =
-          document.createElement("i");
-
-        icon.setAttribute(
-          "data-lucide",
-          activityIcons[activity.title]
-            || "calendar"
+      monthActivities
+        .filter(
+          item =>
+            dateKey(
+              new Date(item.start_at)
+            ) === key
         );
 
-        icons.appendChild(icon);
-      });
 
-      if (
-        activities.length < 4 &&
-        school.length
-      ) {
-        const icon =
-          document.createElement("i");
+    const icons =
+      document.createElement("div");
 
-        icon.setAttribute(
-          "data-lucide",
-          "school"
+    icons.className =
+      "day-icons";
+
+
+    activities
+      .slice(0,4)
+      .forEach(
+        item => {
+
+          const type =
+            findActivityType(
+              item.title
+            );
+
+          icons.appendChild(
+            makeIconElement(
+              type.icon
+            )
+          );
+        }
+      );
+
+
+    if (
+      activities.length > 4
+    ) {
+
+      const more =
+        document.createElement("span");
+
+      more.className =
+        "more-icons";
+
+      more.textContent =
+        "+" +
+        (
+          activities.length -
+          4
         );
 
-        icons.appendChild(icon);
-      }
-
-      const total =
-        activities.length +
-        (school.length ? 1 : 0);
-
-      if (total > 4) {
-
-        const more =
-          document.createElement("span");
-
-        more.className = "more-icons";
-        more.textContent = "+" + (total - 4);
-
-        icons.appendChild(more);
-      }
-
-      cell.appendChild(icons);
+      icons.appendChild(more);
     }
 
 
-    /* PÉČE – ČASOVÉ ÚSEKY */
-    const track =
-      document.createElement("div");
-
-    track.className = "care-track";
-
-    const dayStart =
-      new Date(
-        day.getFullYear(),
-        day.getMonth(),
-        day.getDate(),
-        0, 0, 0
-      );
-
-    const dayEnd =
-      new Date(
-        day.getFullYear(),
-        day.getMonth(),
-        day.getDate() + 1,
-        0, 0, 0
-      );
-
-    const careForDay =
-      monthCare.filter(item => {
-
-        const s = new Date(item.start_at);
-        const e = new Date(item.end_at);
-
-        return (
-          s < dayEnd &&
-          e > dayStart
-        );
-      });
-
-    careForDay.forEach(item => {
-
-      const s =
-        Math.max(
-          new Date(item.start_at).getTime(),
-          dayStart.getTime()
-        );
-
-      const e =
-        Math.min(
-          new Date(item.end_at).getTime(),
-          dayEnd.getTime()
-        );
-
-      const dayMs =
-        24 * 60 * 60 * 1000;
-
-      const left =
-        ((s - dayStart.getTime()) / dayMs) * 100;
-
-      const width =
-        ((e - s) / dayMs) * 100;
-
-      const segment =
-        document.createElement("div");
-
-      segment.className = "care-segment";
-
-      if (item.record_type === "planned") {
-        segment.classList.add("planned-segment");
-      }
-
-      segment.style.left =
-        left + "%";
-
-      segment.style.width =
-        width + "%";
-
-      segment.style.backgroundColor =
-        item.people?.color || "#999";
-
-      track.appendChild(segment);
-    });
-
-    cell.appendChild(track);
+    cell.appendChild(icons);
 
     calendar.appendChild(cell);
   }
@@ -1487,33 +1891,38 @@ function renderCalendar() {
 }
 
 
-/* =========================================================
+/* =====================================================
    DETAIL DNE
-========================================================= */
+===================================================== */
 
 function openDay(key) {
 
   selectedDate = key;
 
+  document
+    .getElementById("daySecret")
+    .classList
+    .remove("open");
+
   const date =
     parseDateKey(key);
 
-  document.getElementById("dayModalTitle")
+  document
+    .getElementById("dayModalTitle")
     .textContent =
-      date.toLocaleDateString(
-        "cs-CZ",
-        {
-          weekday: "long",
-          day: "numeric",
-          month: "long"
-        }
-      );
-
-  document.getElementById("careDetails")
-    .classList.remove("open");
+      date
+        .toLocaleDateString(
+          "cs-CZ",
+          {
+            weekday: "long",
+            day: "numeric",
+            month: "long"
+          }
+        );
 
   renderDayEvents();
   renderDayCare();
+  renderDayCompanions();
 
   openModal("dayModal");
 }
@@ -1522,15 +1931,18 @@ function openDay(key) {
 function renderDayEvents() {
 
   const box =
-    document.getElementById("dayEvents");
+    document
+      .getElementById("dayEvents");
 
   box.innerHTML = "";
 
   const activities =
     monthActivities
       .filter(
-        x =>
-          dateKey(new Date(x.start_at)) ===
+        item =>
+          dateKey(
+            new Date(item.start_at)
+          ) ===
           selectedDate
       )
       .sort(
@@ -1539,15 +1951,8 @@ function renderDayEvents() {
           new Date(b.start_at)
       );
 
-  const school =
-    monthSchool
-      .filter(
-        x =>
-          x.event_date === selectedDate
-      );
 
-
-  if (!activities.length && !school.length) {
+  if (!activities.length) {
 
     box.innerHTML =
       `<div class="empty">
@@ -1556,133 +1961,111 @@ function renderDayEvents() {
   }
 
 
-  activities.forEach(item => {
+  activities.forEach(
+    item => {
 
-    const row =
-      document.createElement("div");
+      const type =
+        findActivityType(
+          item.title
+        );
 
-    row.className = "day-event";
+      const row =
+        document.createElement("div");
 
-    row.onclick =
-      () => editActivity(item);
+      row.className =
+        "day-event";
 
-    row.innerHTML = `
-      <div class="event-icon">
-        <i data-lucide="${
-          activityIcons[item.title] || "calendar"
-        }"></i>
-      </div>
+      row.onclick =
+        () =>
+          editActivity(item);
 
-      <div class="event-main">
+      const iconBox =
+        document.createElement("div");
 
+      iconBox.className =
+        "event-icon";
+
+      iconBox.appendChild(
+        makeIconElement(
+          type.icon
+        )
+      );
+
+
+      const main =
+        document.createElement("div");
+
+      main.className =
+        "event-main";
+
+      main.innerHTML = `
         <div class="event-name">
           ${safe(item.title)}
         </div>
 
         <div class="event-meta">
+
           ${formatTime(item.start_at)}
-          ${
-            item.end_at
-              ? " – " + formatTime(item.end_at)
-              : ""
-          }
 
           ${
-            item.people?.name
-              ? "<br>Doprovod: " +
-                safe(item.people.name)
+            item.end_at
+              ? " – " +
+                formatTime(
+                  item.end_at
+                )
               : ""
           }
 
           ${
             item.location
-              ? "<br>" + safe(item.location)
+              ? "<br>" +
+                safe(item.location)
               : ""
           }
 
           ${
             item.note
-              ? "<br>" + safe(item.note)
+              ? "<br>" +
+                safe(item.note)
               : ""
           }
+
         </div>
+      `;
 
-      </div>
-    `;
+      row.appendChild(iconBox);
+      row.appendChild(main);
 
-    box.appendChild(row);
-  });
+      box.appendChild(row);
+    }
+  );
 
-
-  school.forEach(item => {
-
-    const row =
-      document.createElement("div");
-
-    row.className = "day-event";
-
-    const action =
-      item.event_type === "pickup"
-        ? "Vyzvednutí ze školy"
-        : "Odvedení do školy";
-
-    row.innerHTML = `
-      <div class="event-icon">
-        <i data-lucide="school"></i>
-      </div>
-
-      <div class="event-main">
-
-        <div class="event-name">
-          ${action}
-        </div>
-
-        <div class="event-meta">
-          ${
-            item.event_time
-              ? item.event_time.substring(0,5)
-              : ""
-          }
-
-          ${
-            item.people?.name
-              ? "<br>" + safe(item.people.name)
-              : ""
-          }
-
-          ${
-            item.note
-              ? "<br>" + safe(item.note)
-              : ""
-          }
-        </div>
-
-      </div>
-    `;
-
-    box.appendChild(row);
-  });
 
   refreshIcons();
 }
 
 
-function toggleCareDetails() {
+function toggleDaySecret() {
 
-  document.getElementById("careDetails")
-    .classList.toggle("open");
+  document
+    .getElementById("daySecret")
+    .classList
+    .toggle("open");
 }
 
 
 function renderDayCare() {
 
   const box =
-    document.getElementById("dayCareList");
+    document
+      .getElementById("dayCareList");
 
   box.innerHTML = "";
 
   const day =
-    parseDateKey(selectedDate);
+    parseDateKey(
+      selectedDate
+    );
 
   const dayStart =
     new Date(
@@ -1698,26 +2081,34 @@ function renderDayCare() {
       day.getDate() + 1
     );
 
+
   const care =
     monthCare
-      .filter(item => {
+      .filter(
+        item => {
 
-        const s =
-          new Date(item.start_at);
+          const s =
+            new Date(
+              item.start_at
+            );
 
-        const e =
-          new Date(item.end_at);
+          const e =
+            new Date(
+              item.end_at
+            );
 
-        return (
-          s < dayEnd &&
-          e > dayStart
-        );
-      })
+          return (
+            s < dayEnd &&
+            e > dayStart
+          );
+        }
+      )
       .sort(
         (a,b) =>
           new Date(a.start_at) -
           new Date(b.start_at)
       );
+
 
   if (!care.length) {
 
@@ -1730,72 +2121,1135 @@ function renderDayCare() {
   }
 
 
-  care.forEach(item => {
+  care.forEach(
+    item => {
 
-    const shownStart =
-      new Date(
-        Math.max(
-          new Date(item.start_at),
-          dayStart
-        )
-      );
+      const s =
+        new Date(
+          Math.max(
+            new Date(
+              item.start_at
+            ).getTime(),
+            dayStart.getTime()
+          )
+        );
 
-    const shownEnd =
-      new Date(
-        Math.min(
-          new Date(item.end_at),
-          dayEnd
-        )
-      );
+      const e =
+        new Date(
+          Math.min(
+            new Date(
+              item.end_at
+            ).getTime(),
+            dayEnd.getTime()
+          )
+        );
 
-    const row =
-      document.createElement("div");
 
-    row.className = "care-row";
+      const row =
+        document.createElement("div");
 
-    row.style.borderLeftColor =
-      item.people?.color || "#999";
+      row.className =
+        "care-row";
 
-    row.onclick =
-      () => editCare(item);
+      row.style.borderLeftColor =
+        item.people?.color ||
+        "#999";
 
-    row.innerHTML = `
-      <div class="care-person">
-        ${safe(item.people?.name || "Osoba")}
-      </div>
+      row.onclick =
+        () =>
+          editCare(item);
 
-      <div class="care-meta">
-        ${formatOnlyTime(shownStart)}
-        –
-        ${
-          shownEnd.getTime() ===
-          dayEnd.getTime()
-            ? "24:00"
-            : formatOnlyTime(shownEnd)
-        }
+      row.innerHTML = `
+        <div class="care-person">
+          ${safe(
+            item.people?.name ||
+            "Osoba"
+          )}
+        </div>
 
-        ${
-          item.record_type === "planned"
-            ? " · plán"
-            : ""
-        }
+        <div class="care-meta">
 
-        ${
-          item.note
-            ? "<br>" + safe(item.note)
-            : ""
-        }
-      </div>
-    `;
+          ${formatOnlyTime(s)}
+          –
+          ${
+            e.getTime() ===
+            dayEnd.getTime()
+              ? "24:00"
+              : formatOnlyTime(e)
+          }
 
-    box.appendChild(row);
-  });
+          ${
+            item.record_type ===
+            "planned"
+              ? " · plán"
+              : ""
+          }
+
+          ${
+            item.note
+              ? "<br>" +
+                safe(item.note)
+              : ""
+          }
+
+        </div>
+      `;
+
+      box.appendChild(row);
+    }
+  );
 }
 
 
-/* =========================================================
+function renderDayCompanions() {
+
+  const box =
+    document
+      .getElementById(
+        "dayCompanionList"
+      );
+
+  box.innerHTML = "";
+
+  const activities =
+    monthActivities
+      .filter(
+        item =>
+          dateKey(
+            new Date(item.start_at)
+          ) ===
+          selectedDate
+          &&
+          item.people?.name
+      );
+
+
+  const school =
+    monthSchool
+      .filter(
+        item =>
+          item.event_date ===
+          selectedDate
+      );
+
+
+  if (
+    !activities.length &&
+    !school.length
+  ) {
+
+    return;
+  }
+
+
+  const title =
+    document.createElement("div");
+
+  title.className =
+    "secret-subtitle";
+
+  title.textContent =
+    "Doprovody";
+
+  box.appendChild(title);
+
+
+  activities.forEach(
+    item => {
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "companion-row";
+
+      row.innerHTML = `
+        ${safe(item.title)}
+        ·
+        <strong>
+          ${safe(item.people.name)}
+        </strong>
+      `;
+
+      box.appendChild(row);
+    }
+  );
+
+
+  school.forEach(
+    item => {
+
+      const text =
+        item.event_type ===
+        "pickup"
+          ? "Vyzvednutí ze školy"
+          : "Odvedení do školy";
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "companion-row";
+
+      row.innerHTML = `
+        ${text}
+        ·
+        <strong>
+          ${safe(
+            item.people?.name ||
+            "Neuvedeno"
+          )}
+        </strong>
+      `;
+
+      box.appendChild(row);
+    }
+  );
+}
+
+
+/* =====================================================
+   TYPY AKCÍ
+===================================================== */
+
+function renderActivityChoices() {
+
+  const grid =
+    document
+      .getElementById(
+        "activityTypeGrid"
+      );
+
+  grid.innerHTML = "";
+
+  activityTypes.forEach(
+    type => {
+
+      const button =
+        document
+          .createElement("button");
+
+      button.className =
+        "activity-choice";
+
+      button.dataset.type =
+        type.name;
+
+      button.onclick =
+        () =>
+          selectActivityType(
+            type.name
+          );
+
+      button.appendChild(
+        makeIconElement(
+          type.icon
+        )
+      );
+
+      const span =
+        document.createElement("span");
+
+      span.textContent =
+        type.name;
+
+      button.appendChild(span);
+
+      grid.appendChild(button);
+    }
+  );
+
+  selectActivityType(
+    selectedActivityType
+  );
+
+  refreshIcons();
+}
+
+
+function selectActivityType(name) {
+
+  selectedActivityType =
+    name;
+
+  document
+    .querySelectorAll(
+      ".activity-choice"
+    )
+    .forEach(
+      button => {
+
+        button
+          .classList
+          .toggle(
+            "active",
+            button.dataset.type ===
+            name
+          );
+      }
+    );
+
+
+  if (
+    name === "Nemoc" &&
+    !editingActivityId
+  ) {
+
+    const d =
+      parseDateKey(
+        selectedDate
+      );
+
+    const start =
+      new Date(
+        d.getFullYear(),
+        d.getMonth(),
+        d.getDate(),
+        0,
+        1
+      );
+
+    const end =
+      new Date(
+        d.getFullYear(),
+        d.getMonth(),
+        d.getDate(),
+        23,
+        59
+      );
+
+    document
+      .getElementById(
+        "activityStart"
+      )
+      .value =
+        localDateTime(start);
+
+    document
+      .getElementById(
+        "activityEnd"
+      )
+      .value =
+        localDateTime(end);
+  }
+}
+
+
+function findActivityType(name) {
+
+  return (
+    activityTypes.find(
+      type =>
+        type.name === name
+    )
+    ||
+    {
+      name,
+      icon: "calendar"
+    }
+  );
+}
+
+
+/* =====================================================
+   OPAKOVÁNÍ AKCÍ
+===================================================== */
+
+function setRepeatMode(value) {
+
+  if (editingActivityId) {
+
+    repeatMode = false;
+    return;
+  }
+
+  repeatMode = value;
+
+  document
+    .getElementById("singleBtn")
+    .classList
+    .toggle(
+      "active",
+      !value
+    );
+
+  document
+    .getElementById("repeatBtn")
+    .classList
+    .toggle(
+      "active",
+      value
+    );
+
+  document
+    .getElementById(
+      "singleActivityPanel"
+    )
+    .classList
+    .toggle(
+      "hidden",
+      value
+    );
+
+  document
+    .getElementById(
+      "repeatActivityPanel"
+    )
+    .classList
+    .toggle(
+      "open",
+      value
+    );
+}
+
+
+function toggleWeekday(button) {
+
+  button
+    .classList
+    .toggle("active");
+}
+
+
+function getSelectedWeekdays() {
+
+  return Array
+    .from(
+      document
+        .querySelectorAll(
+          ".weekday-btn.active"
+        )
+    )
+    .map(
+      button =>
+        Number(
+          button.dataset.day
+        )
+    );
+}
+
+
+/* =====================================================
+   AKCE
+===================================================== */
+
+function openActivityModal() {
+
+  editingActivityId = null;
+
+  selectedActivityType =
+    "Fotbal";
+
+  renderActivityChoices();
+
+  document
+    .getElementById(
+      "activityModalTitle"
+    )
+    .textContent =
+      "Přidat akci";
+
+  document
+    .getElementById(
+      "deleteActivityBtn"
+    )
+    .classList
+    .add("hidden");
+
+  setRepeatMode(false);
+
+
+  document
+    .querySelectorAll(
+      ".weekday-btn"
+    )
+    .forEach(
+      button =>
+        button
+          .classList
+          .remove("active")
+    );
+
+
+  const d =
+    parseDateKey(
+      selectedDate
+    );
+
+  const start =
+    new Date(
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate(),
+      16,
+      0
+    );
+
+  const end =
+    new Date(
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate(),
+      17,
+      0
+    );
+
+
+  document
+    .getElementById(
+      "activityStart"
+    )
+    .value =
+      localDateTime(start);
+
+  document
+    .getElementById(
+      "activityEnd"
+    )
+    .value =
+      localDateTime(end);
+
+
+  document
+    .getElementById(
+      "repeatFromDate"
+    )
+    .value =
+      selectedDate;
+
+
+  const monthEnd =
+    new Date(
+      d.getFullYear(),
+      d.getMonth() + 1,
+      0
+    );
+
+
+  document
+    .getElementById(
+      "repeatToDate"
+    )
+    .value =
+      dateKey(monthEnd);
+
+
+  document
+    .getElementById(
+      "repeatStartTime"
+    )
+    .value =
+      "16:00";
+
+
+  document
+    .getElementById(
+      "repeatEndTime"
+    )
+    .value =
+      "17:00";
+
+
+  document
+    .getElementById(
+      "activityCompanion"
+    )
+    .value = "";
+
+
+  document
+    .getElementById(
+      "activityLocation"
+    )
+    .value = "";
+
+
+  document
+    .getElementById(
+      "activityNote"
+    )
+    .value = "";
+
+
+  openModal(
+    "activityModal"
+  );
+}
+
+
+function editActivity(item) {
+
+  editingActivityId =
+    item.id;
+
+  repeatMode = false;
+
+  selectedActivityType =
+    item.title;
+
+  renderActivityChoices();
+
+
+  document
+    .getElementById(
+      "activityModalTitle"
+    )
+    .textContent =
+      "Upravit akci";
+
+
+  document
+    .getElementById(
+      "deleteActivityBtn"
+    )
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById(
+      "singleBtn"
+    )
+    .classList
+    .add("active");
+
+
+  document
+    .getElementById(
+      "repeatBtn"
+    )
+    .classList
+    .remove("active");
+
+
+  document
+    .getElementById(
+      "repeatBtn"
+    )
+    .disabled = true;
+
+
+  document
+    .getElementById(
+      "singleActivityPanel"
+    )
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById(
+      "repeatActivityPanel"
+    )
+    .classList
+    .remove("open");
+
+
+  document
+    .getElementById(
+      "activityStart"
+    )
+    .value =
+      localDateTime(
+        new Date(
+          item.start_at
+        )
+      );
+
+
+  document
+    .getElementById(
+      "activityEnd"
+    )
+    .value =
+      item.end_at
+        ? localDateTime(
+            new Date(
+              item.end_at
+            )
+          )
+        : "";
+
+
+  document
+    .getElementById(
+      "activityCompanion"
+    )
+    .value =
+      item.companion_person_id ||
+      "";
+
+
+  document
+    .getElementById(
+      "activityLocation"
+    )
+    .value =
+      item.location || "";
+
+
+  document
+    .getElementById(
+      "activityNote"
+    )
+    .value =
+      item.note || "";
+
+
+  openModal(
+    "activityModal"
+  );
+}
+
+
+async function saveActivity() {
+
+  const companion =
+    document
+      .getElementById(
+        "activityCompanion"
+      )
+      .value;
+
+  const location =
+    document
+      .getElementById(
+        "activityLocation"
+      )
+      .value
+      .trim();
+
+  const note =
+    document
+      .getElementById(
+        "activityNote"
+      )
+      .value
+      .trim();
+
+
+  if (
+    editingActivityId
+  ) {
+
+    const start =
+      document
+        .getElementById(
+          "activityStart"
+        )
+        .value;
+
+    const end =
+      document
+        .getElementById(
+          "activityEnd"
+        )
+        .value;
+
+
+    if (!start) {
+
+      alert(
+        "Vyplň začátek."
+      );
+
+      return;
+    }
+
+
+    const values = {
+
+      user_id:
+        currentUser.id,
+
+      title:
+        selectedActivityType,
+
+      start_at:
+        new Date(
+          start
+        ).toISOString(),
+
+      end_at:
+        end
+          ? new Date(
+              end
+            ).toISOString()
+          : null,
+
+      companion_person_id:
+        companion || null,
+
+      location:
+        location || null,
+
+      note:
+        note || null
+    };
+
+
+    const { error } =
+      await db
+        .from("activities")
+        .update(values)
+        .eq(
+          "id",
+          editingActivityId
+        );
+
+
+    if (error) {
+
+      alert(
+        error.message
+      );
+
+      return;
+    }
+
+  }
+
+  else if (
+    repeatMode
+  ) {
+
+    const weekdays =
+      getSelectedWeekdays();
+
+    const fromDate =
+      document
+        .getElementById(
+          "repeatFromDate"
+        )
+        .value;
+
+    const toDate =
+      document
+        .getElementById(
+          "repeatToDate"
+        )
+        .value;
+
+    const startTime =
+      document
+        .getElementById(
+          "repeatStartTime"
+        )
+        .value;
+
+    const endTime =
+      document
+        .getElementById(
+          "repeatEndTime"
+        )
+        .value;
+
+
+    if (
+      !weekdays.length
+      ||
+      !fromDate
+      ||
+      !toDate
+      ||
+      !startTime
+    ) {
+
+      alert(
+        "Vyber dny, období a čas."
+      );
+
+      return;
+    }
+
+
+    const from =
+      parseDateKey(
+        fromDate
+      );
+
+    const to =
+      parseDateKey(
+        toDate
+      );
+
+
+    if (
+      to < from
+    ) {
+
+      alert(
+        "Datum „Do“ musí být později."
+      );
+
+      return;
+    }
+
+
+    const rows = [];
+
+    const cursor =
+      new Date(from);
+
+
+    while (
+      cursor <= to
+    ) {
+
+      if (
+        weekdays.includes(
+          cursor.getDay()
+        )
+      ) {
+
+        const start =
+          combineDateAndTime(
+            cursor,
+            startTime
+          );
+
+        let end = null;
+
+        if (endTime) {
+
+          end =
+            combineDateAndTime(
+              cursor,
+              endTime
+            );
+
+          if (
+            end <= start
+          ) {
+
+            end.setDate(
+              end.getDate() + 1
+            );
+          }
+        }
+
+
+        rows.push({
+
+          user_id:
+            currentUser.id,
+
+          title:
+            selectedActivityType,
+
+          start_at:
+            start.toISOString(),
+
+          end_at:
+            end
+              ? end.toISOString()
+              : null,
+
+          companion_person_id:
+            companion || null,
+
+          location:
+            location || null,
+
+          note:
+            note || null
+        });
+      }
+
+
+      cursor.setDate(
+        cursor.getDate() + 1
+      );
+    }
+
+
+    if (!rows.length) {
+
+      alert(
+        "V zadaném období není žádný vybraný den."
+      );
+
+      return;
+    }
+
+
+    const { error } =
+      await db
+        .from("activities")
+        .insert(rows);
+
+
+    if (error) {
+
+      alert(
+        error.message
+      );
+
+      return;
+    }
+
+  }
+
+  else {
+
+    const start =
+      document
+        .getElementById(
+          "activityStart"
+        )
+        .value;
+
+    const end =
+      document
+        .getElementById(
+          "activityEnd"
+        )
+        .value;
+
+
+    if (!start) {
+
+      alert(
+        "Vyplň začátek."
+      );
+
+      return;
+    }
+
+
+    const { error } =
+      await db
+        .from("activities")
+        .insert({
+
+          user_id:
+            currentUser.id,
+
+          title:
+            selectedActivityType,
+
+          start_at:
+            new Date(
+              start
+            ).toISOString(),
+
+          end_at:
+            end
+              ? new Date(
+                  end
+                ).toISOString()
+              : null,
+
+          companion_person_id:
+            companion || null,
+
+          location:
+            location || null,
+
+          note:
+            note || null
+
+        });
+
+
+    if (error) {
+
+      alert(
+        error.message
+      );
+
+      return;
+    }
+  }
+
+
+  document
+    .getElementById(
+      "repeatBtn"
+    )
+    .disabled = false;
+
+
+  closeModal(
+    "activityModal"
+  );
+
+
+  await loadMonthData();
+
+  if (
+    document
+      .getElementById("dayModal")
+      .classList
+      .contains("open")
+  ) {
+
+    renderDayEvents();
+    renderDayCompanions();
+  }
+}
+
+
+async function deleteActivity() {
+
+  if (
+    !editingActivityId
+  ) {
+    return;
+  }
+
+
+  if (
+    !confirm(
+      "Opravdu smazat tuto akci?"
+    )
+  ) {
+    return;
+  }
+
+
+  const { error } =
+    await db
+      .from("activities")
+      .delete()
+      .eq(
+        "id",
+        editingActivityId
+      );
+
+
+  if (error) {
+
+    alert(
+      error.message
+    );
+
+    return;
+  }
+
+
+  document
+    .getElementById(
+      "repeatBtn"
+    )
+    .disabled = false;
+
+
+  closeModal(
+    "activityModal"
+  );
+
+
+  await loadMonthData();
+
+  renderDayEvents();
+  renderDayCompanions();
+}
+
+
+/* =====================================================
    OSOBY
-========================================================= */
+===================================================== */
 
 async function loadPeople() {
 
@@ -1805,26 +3259,43 @@ async function loadPeople() {
       .select("*")
       .order("created_at");
 
+
   if (error) {
+
     console.error(error);
     return;
   }
 
-  people = data || [];
+
+  people =
+    data || [];
+
 
   renderPeople();
 
-  fillPersonSelect(
-    document.getElementById("carePerson")
-  );
 
   fillPersonSelect(
-    document.getElementById("activityCompanion"),
+    document
+      .getElementById(
+        "carePerson"
+      )
+  );
+
+
+  fillPersonSelect(
+    document
+      .getElementById(
+        "activityCompanion"
+      ),
     true
   );
 
+
   fillPersonSelect(
-    document.getElementById("schoolPerson")
+    document
+      .getElementById(
+        "schoolPerson"
+      )
   );
 }
 
@@ -1832,268 +3303,453 @@ async function loadPeople() {
 function renderPeople() {
 
   const box =
-    document.getElementById("peopleList");
+    document
+      .getElementById(
+        "peopleList"
+      );
 
   box.innerHTML = "";
 
-  if (!people.length) {
 
-    box.innerHTML =
-      `<div class="empty">
-        Zatím nejsou přidané žádné osoby.
-      </div>`;
+  people.forEach(
+    person => {
 
-    return;
-  }
+      const row =
+        document
+          .createElement("div");
 
-  people.forEach(person => {
+      row.className =
+        "person-item";
 
-    const row =
-      document.createElement("div");
+      row.innerHTML = `
+        <span
+          class="person-dot"
+          style="background:${person.color}">
+        </span>
 
-    row.className = "person-chip";
+        ${safe(person.name)}
+      `;
 
-    row.innerHTML = `
-      <span
-        class="person-dot"
-        style="background:${person.color}">
-      </span>
-
-      <span>${safe(person.name)}</span>
-    `;
-
-    box.appendChild(row);
-  });
+      box.appendChild(row);
+    }
+  );
 }
 
 
-function fillPersonSelect(select, allowEmpty=false) {
+function fillPersonSelect(
+  select,
+  empty = false
+) {
 
   select.innerHTML = "";
 
-  if (allowEmpty) {
 
-    const empty =
-      document.createElement("option");
-
-    empty.value = "";
-    empty.textContent = "Neuvedeno";
-
-    select.appendChild(empty);
-  }
-
-  people.forEach(person => {
+  if (empty) {
 
     const option =
-      document.createElement("option");
+      document
+        .createElement(
+          "option"
+        );
 
-    option.value = person.id;
-    option.textContent = person.name;
+    option.value = "";
+
+    option.textContent =
+      "Neuvedeno";
 
     select.appendChild(option);
-  });
+  }
+
+
+  people.forEach(
+    person => {
+
+      const option =
+        document
+          .createElement(
+            "option"
+          );
+
+      option.value =
+        person.id;
+
+      option.textContent =
+        person.name;
+
+      select.appendChild(option);
+    }
+  );
 }
 
 
 function openPersonModal() {
 
-  document.getElementById("personName").value = "";
-  document.getElementById("personColor").value = "#e85d75";
+  document
+    .getElementById(
+      "personName"
+    )
+    .value = "";
 
-  openModal("personModal");
+  openModal(
+    "personModal"
+  );
 }
 
 
 async function savePerson() {
 
   const name =
-    document.getElementById("personName")
-      .value.trim();
+    document
+      .getElementById(
+        "personName"
+      )
+      .value
+      .trim();
 
   const color =
-    document.getElementById("personColor")
+    document
+      .getElementById(
+        "personColor"
+      )
       .value;
 
+
   if (!name) {
-    alert("Napiš název osoby.");
+
+    alert(
+      "Napiš název osoby."
+    );
+
     return;
   }
+
 
   const { error } =
     await db
       .from("people")
       .insert({
-        user_id: currentUser.id,
+
+        user_id:
+          currentUser.id,
+
         name,
         color
       });
 
+
   if (error) {
-    alert(error.message);
+
+    alert(
+      error.message
+    );
+
     return;
   }
 
-  closeModal("personModal");
+
+  closeModal(
+    "personModal"
+  );
 
   await loadPeople();
-  await loadMonthData();
 }
 
 
-/* =========================================================
+/* =====================================================
    PÉČE
-========================================================= */
+===================================================== */
 
 function openCareModal() {
 
   if (!people.length) {
-    alert("Nejdřív přidej alespoň jednu osobu.");
+
+    alert(
+      "Nejdřív přidej osobu."
+    );
+
     return;
   }
 
+
   editingCareId = null;
 
-  document.getElementById("careModalTitle")
-    .textContent = "Přidat";
 
-  document.getElementById("deleteCareBtn")
-    .classList.add("hidden");
+  document
+    .getElementById(
+      "careModalTitle"
+    )
+    .textContent =
+      "Přidat";
 
-  const date =
-    parseDateKey(selectedDate);
+
+  document
+    .getElementById(
+      "deleteCareBtn"
+    )
+    .classList
+    .add("hidden");
+
+
+  const d =
+    parseDateKey(
+      selectedDate
+    );
+
 
   const start =
     new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate(),
       0,
       1
     );
 
+
   const end =
     new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate(),
       23,
       59
     );
 
-  document.getElementById("careStart").value =
-    localDateTime(start);
 
-  document.getElementById("careEnd").value =
-    localDateTime(end);
+  document
+    .getElementById(
+      "careStart"
+    )
+    .value =
+      localDateTime(start);
 
-  document.getElementById("careRecordType").value =
-    "actual";
 
-  document.getElementById("careNote").value = "";
+  document
+    .getElementById(
+      "careEnd"
+    )
+    .value =
+      localDateTime(end);
 
-  openModal("careModal");
+
+  document
+    .getElementById(
+      "careRecordType"
+    )
+    .value =
+      "actual";
+
+
+  document
+    .getElementById(
+      "careNote"
+    )
+    .value = "";
+
+
+  openModal(
+    "careModal"
+  );
 }
 
 
 function editCare(item) {
 
-  editingCareId = item.id;
+  editingCareId =
+    item.id;
 
-  document.getElementById("careModalTitle")
-    .textContent = "Upravit";
 
-  document.getElementById("deleteCareBtn")
-    .classList.remove("hidden");
+  document
+    .getElementById(
+      "careModalTitle"
+    )
+    .textContent =
+      "Upravit";
 
-  document.getElementById("carePerson").value =
-    item.person_id;
 
-  document.getElementById("careStart").value =
-    localDateTime(
-      new Date(item.start_at)
-    );
+  document
+    .getElementById(
+      "deleteCareBtn"
+    )
+    .classList
+    .remove("hidden");
 
-  document.getElementById("careEnd").value =
-    localDateTime(
-      new Date(item.end_at)
-    );
 
-  document.getElementById("careRecordType").value =
-    item.record_type;
+  document
+    .getElementById(
+      "carePerson"
+    )
+    .value =
+      item.person_id;
 
-  document.getElementById("careNote").value =
-    item.note || "";
 
-  openModal("careModal");
+  document
+    .getElementById(
+      "careStart"
+    )
+    .value =
+      localDateTime(
+        new Date(
+          item.start_at
+        )
+      );
+
+
+  document
+    .getElementById(
+      "careEnd"
+    )
+    .value =
+      localDateTime(
+        new Date(
+          item.end_at
+        )
+      );
+
+
+  document
+    .getElementById(
+      "careRecordType"
+    )
+    .value =
+      item.record_type;
+
+
+  document
+    .getElementById(
+      "careNote"
+    )
+    .value =
+      item.note || "";
+
+
+  openModal(
+    "careModal"
+  );
 }
 
 
 async function saveCare() {
 
-  const personId =
-    document.getElementById("carePerson").value;
+  const person =
+    document
+      .getElementById(
+        "carePerson"
+      )
+      .value;
 
   const start =
-    document.getElementById("careStart").value;
+    document
+      .getElementById(
+        "careStart"
+      )
+      .value;
 
   const end =
-    document.getElementById("careEnd").value;
+    document
+      .getElementById(
+        "careEnd"
+      )
+      .value;
 
-  const recordType =
-    document.getElementById("careRecordType").value;
+  const type =
+    document
+      .getElementById(
+        "careRecordType"
+      )
+      .value;
 
   const note =
-    document.getElementById("careNote")
-      .value.trim();
+    document
+      .getElementById(
+        "careNote"
+      )
+      .value
+      .trim();
 
-  if (!personId || !start || !end) {
-    alert("Vyplň osobu a oba časy.");
-    return;
-  }
 
   if (
-    new Date(end) <=
-    new Date(start)
+    !person ||
+    !start ||
+    !end
   ) {
-    alert("Čas do musí být později než čas od.");
+
+    alert(
+      "Vyplň osobu a čas."
+    );
+
     return;
   }
 
+
   const values = {
-    user_id: currentUser.id,
-    person_id: personId,
+
+    user_id:
+      currentUser.id,
+
+    person_id:
+      person,
+
     start_at:
-      new Date(start).toISOString(),
+      new Date(
+        start
+      ).toISOString(),
+
     end_at:
-      new Date(end).toISOString(),
-    record_type: recordType,
-    note: note || null
+      new Date(
+        end
+      ).toISOString(),
+
+    record_type:
+      type,
+
+    note:
+      note || null
   };
+
 
   let result;
 
-  if (editingCareId) {
+
+  if (
+    editingCareId
+  ) {
 
     result =
       await db
-        .from("care_periods")
+        .from(
+          "care_periods"
+        )
         .update(values)
-        .eq("id", editingCareId);
+        .eq(
+          "id",
+          editingCareId
+        );
 
   } else {
 
     result =
       await db
-        .from("care_periods")
+        .from(
+          "care_periods"
+        )
         .insert(values);
   }
 
+
   if (result.error) {
-    alert(result.error.message);
+
+    alert(
+      result.error.message
+    );
+
     return;
   }
 
-  closeModal("careModal");
+
+  closeModal(
+    "careModal"
+  );
 
   await loadMonthData();
 
@@ -2103,24 +3759,47 @@ async function saveCare() {
 
 async function deleteCare() {
 
-  if (!editingCareId) return;
-
-  if (!confirm("Opravdu smazat tento záznam?")) {
+  if (
+    !editingCareId
+  ) {
     return;
   }
+
+
+  if (
+    !confirm(
+      "Opravdu smazat?"
+    )
+  ) {
+    return;
+  }
+
 
   const { error } =
     await db
-      .from("care_periods")
+      .from(
+        "care_periods"
+      )
       .delete()
-      .eq("id", editingCareId);
+      .eq(
+        "id",
+        editingCareId
+      );
+
 
   if (error) {
-    alert(error.message);
+
+    alert(
+      error.message
+    );
+
     return;
   }
 
-  closeModal("careModal");
+
+  closeModal(
+    "careModal"
+  );
 
   await loadMonthData();
 
@@ -2128,275 +3807,171 @@ async function deleteCare() {
 }
 
 
-/* =========================================================
-   AKCE
-========================================================= */
-
-function openActivityModal() {
-
-  editingActivityId = null;
-
-  document.getElementById("activityModalTitle")
-    .textContent = "Přidat akci";
-
-  document.getElementById("deleteActivityBtn")
-    .classList.add("hidden");
-
-  const d =
-    parseDateKey(selectedDate);
-
-  const start =
-    new Date(
-      d.getFullYear(),
-      d.getMonth(),
-      d.getDate(),
-      16, 0
-    );
-
-  const end =
-    new Date(
-      d.getFullYear(),
-      d.getMonth(),
-      d.getDate(),
-      17, 0
-    );
-
-  document.getElementById("activityType").value =
-    "Fotbal";
-
-  document.getElementById("activityStart").value =
-    localDateTime(start);
-
-  document.getElementById("activityEnd").value =
-    localDateTime(end);
-
-  document.getElementById("activityCompanion").value = "";
-  document.getElementById("activityLocation").value = "";
-  document.getElementById("activityNote").value = "";
-
-  openModal("activityModal");
-}
-
-
-function editActivity(item) {
-
-  editingActivityId = item.id;
-
-  document.getElementById("activityModalTitle")
-    .textContent = "Upravit akci";
-
-  document.getElementById("deleteActivityBtn")
-    .classList.remove("hidden");
-
-  document.getElementById("activityType").value =
-    item.title;
-
-  document.getElementById("activityStart").value =
-    localDateTime(
-      new Date(item.start_at)
-    );
-
-  document.getElementById("activityEnd").value =
-    item.end_at
-      ? localDateTime(new Date(item.end_at))
-      : "";
-
-  document.getElementById("activityCompanion").value =
-    item.companion_person_id || "";
-
-  document.getElementById("activityLocation").value =
-    item.location || "";
-
-  document.getElementById("activityNote").value =
-    item.note || "";
-
-  openModal("activityModal");
-}
-
-
-async function saveActivity() {
-
-  const title =
-    document.getElementById("activityType").value;
-
-  const start =
-    document.getElementById("activityStart").value;
-
-  const end =
-    document.getElementById("activityEnd").value;
-
-  const companion =
-    document.getElementById("activityCompanion").value;
-
-  const location =
-    document.getElementById("activityLocation")
-      .value.trim();
-
-  const note =
-    document.getElementById("activityNote")
-      .value.trim();
-
-  if (!start) {
-    alert("Vyplň začátek akce.");
-    return;
-  }
-
-  const values = {
-    user_id: currentUser.id,
-    title,
-    start_at:
-      new Date(start).toISOString(),
-    end_at:
-      end
-        ? new Date(end).toISOString()
-        : null,
-    companion_person_id:
-      companion || null,
-    location:
-      location || null,
-    note:
-      note || null
-  };
-
-  let result;
-
-  if (editingActivityId) {
-
-    result =
-      await db
-        .from("activities")
-        .update(values)
-        .eq("id", editingActivityId);
-
-  } else {
-
-    result =
-      await db
-        .from("activities")
-        .insert(values);
-  }
-
-  if (result.error) {
-    alert(result.error.message);
-    return;
-  }
-
-  closeModal("activityModal");
-
-  await loadMonthData();
-
-  renderDayEvents();
-}
-
-
-async function deleteActivity() {
-
-  if (!editingActivityId) return;
-
-  if (!confirm("Opravdu smazat tuto akci?")) {
-    return;
-  }
-
-  const { error } =
-    await db
-      .from("activities")
-      .delete()
-      .eq("id", editingActivityId);
-
-  if (error) {
-    alert(error.message);
-    return;
-  }
-
-  closeModal("activityModal");
-
-  await loadMonthData();
-
-  renderDayEvents();
-}
-
-
-/* =========================================================
+/* =====================================================
    ŠKOLA
-========================================================= */
+===================================================== */
 
 function openSchoolModal() {
 
-  document.getElementById("schoolType").value =
-    "pickup";
+  document
+    .getElementById(
+      "schoolType"
+    )
+    .value =
+      "pickup";
 
-  document.getElementById("schoolTime").value =
-    "14:30";
 
-  document.getElementById("schoolNote").value = "";
+  document
+    .getElementById(
+      "schoolTime"
+    )
+    .value =
+      "14:30";
 
-  openModal("schoolModal");
+
+  document
+    .getElementById(
+      "schoolNote"
+    )
+    .value = "";
+
+
+  openModal(
+    "schoolModal"
+  );
 }
 
 
 async function saveSchoolEvent() {
 
   const type =
-    document.getElementById("schoolType").value;
+    document
+      .getElementById(
+        "schoolType"
+      )
+      .value;
 
-  const personId =
-    document.getElementById("schoolPerson").value;
+  const person =
+    document
+      .getElementById(
+        "schoolPerson"
+      )
+      .value;
 
   const time =
-    document.getElementById("schoolTime").value;
+    document
+      .getElementById(
+        "schoolTime"
+      )
+      .value;
 
   const note =
-    document.getElementById("schoolNote")
-      .value.trim();
+    document
+      .getElementById(
+        "schoolNote"
+      )
+      .value
+      .trim();
 
-  if (!personId) {
-    alert("Vyber osobu.");
+
+  if (!person) {
+
+    alert(
+      "Vyber osobu."
+    );
+
     return;
   }
+
 
   const { error } =
     await db
-      .from("school_events")
+      .from(
+        "school_events"
+      )
       .insert({
-        user_id: currentUser.id,
-        event_date: selectedDate,
-        event_type: type,
-        person_id: personId,
-        event_time: time || null,
-        note: note || null
+
+        user_id:
+          currentUser.id,
+
+        event_date:
+          selectedDate,
+
+        event_type:
+          type,
+
+        person_id:
+          person,
+
+        event_time:
+          time || null,
+
+        note:
+          note || null
       });
 
+
   if (error) {
-    alert(error.message);
+
+    alert(
+      error.message
+    );
+
     return;
   }
 
-  closeModal("schoolModal");
+
+  closeModal(
+    "schoolModal"
+  );
+
 
   await loadMonthData();
 
-  renderDayEvents();
+  renderDayCompanions();
 }
 
 
-/* =========================================================
+/* =====================================================
    PŘEHLED
-========================================================= */
+===================================================== */
 
-function setOverviewPeriod(period) {
+function setOverviewPeriod(
+  period
+) {
 
-  overviewPeriod = period;
+  overviewPeriod =
+    period;
 
-  document.querySelectorAll(".overview-tab")
-    .forEach(btn => {
 
-      btn.classList.toggle(
-        "active",
-        btn.dataset.period === period
-      );
-    });
+  document
+    .querySelectorAll(
+      ".overview-tab"
+    )
+    .forEach(
+      button =>
+        button
+          .classList
+          .toggle(
+            "active",
+            button.dataset.period ===
+            period
+          )
+    );
+
 
   renderOverview();
+}
+
+
+function toggleOverviewSecret() {
+
+  document
+    .getElementById(
+      "overviewSecret"
+    )
+    .classList
+    .toggle("open");
 }
 
 
@@ -2405,292 +3980,530 @@ async function renderOverview() {
   const range =
     getOverviewRange();
 
-  document.getElementById("overviewRangeTitle")
-    .textContent = range.title;
+
+  document
+    .getElementById(
+      "overviewTitle"
+    )
+    .textContent =
+      range.title;
+
 
   const [
     careResult,
     activityResult,
     schoolResult
-  ] = await Promise.all([
+  ] =
+    await Promise.all([
 
-    db
-      .from("care_periods")
-      .select(`
-        *,
-        people (
-          id,
-          name,
-          color
+      db
+        .from(
+          "care_periods"
         )
-      `)
-      .eq("record_type", "actual")
-      .lt("start_at", range.end.toISOString())
-      .gt("end_at", range.start.toISOString()),
+        .select(`
+          *,
+          people (
+            id,
+            name,
+            color
+          )
+        `)
+        .eq(
+          "record_type",
+          "actual"
+        )
+        .lt(
+          "start_at",
+          range.end
+            .toISOString()
+        )
+        .gt(
+          "end_at",
+          range.start
+            .toISOString()
+        ),
 
-    db
-      .from("activities")
-      .select(`
-        *,
-        people:companion_person_id (
-          id,
-          name,
-          color
+      db
+        .from(
+          "activities"
         )
-      `)
-      .gte("start_at", range.start.toISOString())
-      .lt("start_at", range.end.toISOString()),
+        .select(`
+          *,
+          people:companion_person_id (
+            id,
+            name,
+            color
+          )
+        `)
+        .gte(
+          "start_at",
+          range.start
+            .toISOString()
+        )
+        .lt(
+          "start_at",
+          range.end
+            .toISOString()
+        ),
 
-    db
-      .from("school_events")
-      .select(`
-        *,
-        people (
-          id,
-          name,
-          color
+      db
+        .from(
+          "school_events"
         )
-      `)
-      .gte("event_date", dateKey(range.start))
-      .lt("event_date", dateKey(range.end))
-  ]);
+        .select(`
+          *,
+          people (
+            id,
+            name,
+            color
+          )
+        `)
+        .gte(
+          "event_date",
+          dateKey(
+            range.start
+          )
+        )
+        .lt(
+          "event_date",
+          dateKey(
+            range.end
+          )
+        )
+
+    ]);
+
+
+  renderOverviewActivities(
+    activityResult.data || []
+  );
+
 
   renderCareStats(
     careResult.data || [],
     range
   );
 
-  renderActivityStats(
-    activityResult.data || []
-  );
 
-  renderSchoolStats(
+  renderCompanionStats(
+    activityResult.data || [],
     schoolResult.data || []
   );
 }
 
 
-function renderCareStats(care, range) {
-
-  const map = {};
-
-  care.forEach(item => {
-
-    const start =
-      Math.max(
-        new Date(item.start_at).getTime(),
-        range.start.getTime()
-      );
-
-    const end =
-      Math.min(
-        new Date(item.end_at).getTime(),
-        range.end.getTime()
-      );
-
-    if (end <= start) return;
-
-    const hours =
-      (end - start) / 3600000;
-
-    const id =
-      item.person_id;
-
-    if (!map[id]) {
-      map[id] = {
-        name:
-          item.people?.name || "Osoba",
-        color:
-          item.people?.color || "#999",
-        hours: 0
-      };
-    }
-
-    map[id].hours += hours;
-  });
+function renderOverviewActivities(
+  activities
+) {
 
   const box =
-    document.getElementById("careStats");
+    document
+      .getElementById(
+        "overviewActivities"
+      );
 
-  const rows =
-    Object.values(map)
-      .sort((a,b) => b.hours - a.hours);
+  const counts = {};
 
-  if (!rows.length) {
+
+  activities.forEach(
+    item => {
+
+      counts[item.title] =
+        (
+          counts[item.title] ||
+          0
+        )
+        +
+        1;
+    }
+  );
+
+
+  const entries =
+    Object.entries(
+      counts
+    );
+
+
+  if (!entries.length) {
+
     box.innerHTML =
-      `<div class="empty">Bez záznamů.</div>`;
+      `<div class="empty">
+        Zatím žádné akce.
+      </div>`;
+
     return;
   }
 
-  box.innerHTML = rows
-    .map(item => `
-      <div class="stat-row">
 
-        <div class="stat-name">
-          <span class="person-dot"
-            style="background:${item.color}">
-          </span>
-          ${safe(item.name)}
-        </div>
-
-        <div class="stat-value">
-          ${formatHours(item.hours)}
-        </div>
-
-      </div>
-    `)
-    .join("");
-}
+  box.innerHTML = "";
 
 
-function renderActivityStats(items) {
+  activityTypes
+    .filter(
+      type =>
+        counts[type.name]
+    )
+    .forEach(
+      type => {
 
-  const map = {};
+        const row =
+          document
+            .createElement("div");
 
-  items.forEach(item => {
+        row.className =
+          "overview-item";
 
-    if (!map[item.title]) {
-      map[item.title] = {
-        count: 0,
-        companion: {}
-      };
-    }
 
-    map[item.title].count++;
+        const icon =
+          document
+            .createElement("div");
 
-    if (item.people?.name) {
+        icon.className =
+          "overview-item-icon";
 
-      const name =
-        item.people.name;
-
-      map[item.title].companion[name] =
-        (map[item.title].companion[name] || 0) + 1;
-    }
-  });
-
-  const box =
-    document.getElementById("activityStats");
-
-  const names =
-    Object.keys(map);
-
-  if (!names.length) {
-    box.innerHTML =
-      `<div class="empty">Bez akcí.</div>`;
-    return;
-  }
-
-  box.innerHTML =
-    names.map(name => {
-
-      const companionText =
-        Object.entries(map[name].companion)
-          .map(([person,count]) =>
-            `${safe(person)} ${count}×`
+        icon.appendChild(
+          makeIconElement(
+            type.icon
           )
-          .join(" · ");
+        );
 
-      return `
-        <div class="stat-row">
 
-          <div>
-            <div class="activity-stat">
-              <i data-lucide="${
-                activityIcons[name] || "calendar"
-              }"></i>
+        const name =
+          document
+            .createElement("div");
 
-              <strong>${safe(name)}</strong>
-            </div>
+        name.textContent =
+          type.name;
 
-            ${
-              companionText
-                ? `<div class="event-meta">${companionText}</div>`
-                : ""
-            }
-          </div>
 
-          <div class="stat-value">
-            ${map[name].count}×
-          </div>
+        const count =
+          document
+            .createElement("div");
 
-        </div>
-      `;
-    }).join("");
+        count.className =
+          "overview-count";
+
+        count.textContent =
+          counts[type.name] +
+          "×";
+
+
+        row.appendChild(icon);
+        row.appendChild(name);
+        row.appendChild(count);
+
+        box.appendChild(row);
+      }
+    );
+
 
   refreshIcons();
 }
 
 
-function renderSchoolStats(items) {
+function renderCareStats(
+  care,
+  range
+) {
+
+  const box =
+    document
+      .getElementById(
+        "careStats"
+      );
 
   const map = {};
 
-  items.forEach(item => {
 
-    const key =
-      item.people?.name || "Neuvedeno";
+  care.forEach(
+    item => {
 
-    if (!map[key]) {
-      map[key] = {
-        pickup: 0,
-        dropoff: 0
-      };
+      const start =
+        Math.max(
+          new Date(
+            item.start_at
+          ).getTime(),
+          range.start.getTime()
+        );
+
+      const end =
+        Math.min(
+          new Date(
+            item.end_at
+          ).getTime(),
+          range.end.getTime()
+        );
+
+
+      if (
+        end <= start
+      ) {
+        return;
+      }
+
+
+      const id =
+        item.person_id;
+
+      const hours =
+        (
+          end -
+          start
+        )
+        /
+        3600000;
+
+
+      if (!map[id]) {
+
+        map[id] = {
+
+          name:
+            item.people?.name ||
+            "Osoba",
+
+          color:
+            item.people?.color ||
+            "#999",
+
+          hours: 0
+        };
+      }
+
+
+      map[id].hours +=
+        hours;
     }
+  );
 
-    map[key][item.event_type]++;
-  });
+
+  const total =
+    Object.values(
+      map
+    )
+    .reduce(
+      (
+        sum,
+        item
+      ) =>
+        sum +
+        item.hours,
+      0
+    );
+
+
+  box.innerHTML = "";
+
+
+  Object
+    .values(map)
+    .sort(
+      (a,b) =>
+        b.hours -
+        a.hours
+    )
+    .forEach(
+      item => {
+
+        const percent =
+          total
+            ? Math.round(
+                (
+                  item.hours /
+                  total
+                )
+                *
+                100
+              )
+            : 0;
+
+
+        const row =
+          document
+            .createElement("div");
+
+        row.className =
+          "stat-row";
+
+        row.innerHTML = `
+          <div>
+
+            <div class="stat-person">
+
+              <span
+                class="person-dot"
+                style="background:${item.color}">
+              </span>
+
+              ${safe(item.name)}
+
+            </div>
+
+            <div class="small">
+              ${percent} %
+            </div>
+
+          </div>
+
+          <strong>
+            ${formatHours(
+              item.hours
+            )}
+          </strong>
+        `;
+
+        box.appendChild(row);
+      }
+    );
+
+
+  if (!total) {
+
+    box.innerHTML =
+      `<div class="empty">
+        Bez záznamů.
+      </div>`;
+  }
+}
+
+
+function renderCompanionStats(
+  activities,
+  school
+) {
 
   const box =
-    document.getElementById("schoolStats");
+    document
+      .getElementById(
+        "companionStats"
+      );
 
-  if (!Object.keys(map).length) {
-    box.innerHTML =
-      `<div class="empty">Bez záznamů.</div>`;
-    return;
-  }
+  const map = {};
 
-  box.innerHTML =
-    Object.entries(map)
-      .map(([name, values]) => `
-        <div class="stat-row">
 
+  activities.forEach(
+    item => {
+
+      if (
+        !item.people?.name
+      ) {
+        return;
+      }
+
+      const name =
+        item.people.name;
+
+      map[name] =
+        (
+          map[name] ||
+          0
+        )
+        +
+        1;
+    }
+  );
+
+
+  school.forEach(
+    item => {
+
+      const name =
+        item.people?.name;
+
+      if (!name) {
+        return;
+      }
+
+      map[name] =
+        (
+          map[name] ||
+          0
+        )
+        +
+        1;
+    }
+  );
+
+
+  box.innerHTML = "";
+
+
+  Object
+    .entries(map)
+    .sort(
+      (a,b) =>
+        b[1] -
+        a[1]
+    )
+    .forEach(
+      ([name,count]) => {
+
+        const row =
+          document
+            .createElement("div");
+
+        row.className =
+          "stat-row";
+
+        row.innerHTML = `
           <div>
-            <strong>${safe(name)}</strong>
-
-            <div class="event-meta">
-              Odvedení: ${values.dropoff}×
-              ·
-              Vyzvednutí: ${values.pickup}×
-            </div>
+            ${safe(name)}
           </div>
 
-          <div class="stat-value">
-            ${values.pickup + values.dropoff}×
-          </div>
+          <strong>
+            ${count}×
+          </strong>
+        `;
 
-        </div>
-      `)
-      .join("");
+        box.appendChild(row);
+      }
+    );
+
+
+  if (
+    !Object.keys(map).length
+  ) {
+
+    box.innerHTML =
+      `<div class="empty">
+        Bez záznamů.
+      </div>`;
+  }
 }
 
 
 function getOverviewRange() {
 
-  const now = new Date();
+  const now =
+    new Date();
 
-  if (overviewPeriod === "week") {
+
+  if (
+    overviewPeriod ===
+    "week"
+  ) {
 
     const start =
       new Date(now);
 
-    const day =
-      (start.getDay() + 6) % 7;
+    const index =
+      (
+        start.getDay() +
+        6
+      )
+      %
+      7;
 
     start.setDate(
-      start.getDate() - day
+      start.getDate() -
+      index
     );
 
-    start.setHours(0,0,0,0);
+    start.setHours(
+      0,0,0,0
+    );
+
 
     const end =
       new Date(start);
@@ -2698,6 +4511,7 @@ function getOverviewRange() {
     end.setDate(
       end.getDate() + 7
     );
+
 
     return {
       start,
@@ -2708,7 +4522,10 @@ function getOverviewRange() {
   }
 
 
-  if (overviewPeriod === "year") {
+  if (
+    overviewPeriod ===
+    "year"
+  ) {
 
     const start =
       new Date(
@@ -2724,11 +4541,14 @@ function getOverviewRange() {
         1
       );
 
+
     return {
       start,
       end,
       title:
-        String(now.getFullYear())
+        String(
+          now.getFullYear()
+        )
     };
   }
 
@@ -2740,6 +4560,7 @@ function getOverviewRange() {
       1
     );
 
+
   const end =
     new Date(
       now.getFullYear(),
@@ -2747,29 +4568,35 @@ function getOverviewRange() {
       1
     );
 
+
   return {
+
     start,
     end,
+
     title:
-      now.toLocaleDateString(
-        "cs-CZ",
-        {
-          month: "long",
-          year: "numeric"
-        }
-      )
+      now
+        .toLocaleDateString(
+          "cs-CZ",
+          {
+            month: "long",
+            year: "numeric"
+          }
+        )
   };
 }
 
 
-/* =========================================================
+/* =====================================================
    MODALY
-========================================================= */
+===================================================== */
 
 function openModal(id) {
 
-  document.getElementById(id)
-    .classList.add("open");
+  document
+    .getElementById(id)
+    .classList
+    .add("open");
 
   refreshIcons();
 }
@@ -2777,16 +4604,107 @@ function openModal(id) {
 
 function closeModal(id) {
 
-  document.getElementById(id)
-    .classList.remove("open");
+  document
+    .getElementById(id)
+    .classList
+    .remove("open");
+
+
+  if (
+    id ===
+    "activityModal"
+  ) {
+
+    document
+      .getElementById(
+        "repeatBtn"
+      )
+      .disabled =
+        false;
+  }
 }
 
 
-/* =========================================================
-   POMOCNÉ
-========================================================= */
+/* =====================================================
+   IKONY
+===================================================== */
 
-function startOfCalendarGrid(month) {
+function makeIconElement(
+  icon
+) {
+
+  if (
+    icon === "soccer"
+  ) {
+
+    const holder =
+      document
+        .createElement("span");
+
+    holder.className =
+      "soccer-icon";
+
+    holder.innerHTML = `
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="m12 7 3 2-1 4h-4L9 9l3-2Z"></path>
+        <path d="m9 9-4-1"></path>
+        <path d="m15 9 4-1"></path>
+        <path d="m10 13-2 4"></path>
+        <path d="m14 13 2 4"></path>
+        <path d="m8 17-3 1"></path>
+        <path d="m16 17 3 1"></path>
+      </svg>
+    `;
+
+    return holder;
+  }
+
+
+  const element =
+    document
+      .createElement("i");
+
+  element.setAttribute(
+    "data-lucide",
+    icon
+  );
+
+  return element;
+}
+
+
+function refreshIcons() {
+
+  setTimeout(
+    () => {
+
+      if (
+        window.lucide
+      ) {
+
+        lucide.createIcons();
+      }
+    },
+    0
+  );
+}
+
+
+/* =====================================================
+   DATUMY
+===================================================== */
+
+function startOfCalendarGrid(
+  month
+) {
 
   const first =
     new Date(
@@ -2795,19 +4713,63 @@ function startOfCalendarGrid(month) {
       1
     );
 
-  const mondayIndex =
-    (first.getDay() + 6) % 7;
+  const index =
+    (
+      first.getDay() +
+      6
+    )
+    %
+    7;
 
   const start =
     new Date(first);
 
   start.setDate(
-    start.getDate() - mondayIndex
+    start.getDate() -
+    index
   );
 
-  start.setHours(0,0,0,0);
+  start.setHours(
+    0,0,0,0
+  );
 
   return start;
+}
+
+
+function endOfCalendarGrid(
+  month
+) {
+
+  const last =
+    new Date(
+      month.getFullYear(),
+      month.getMonth() + 1,
+      0
+    );
+
+  const sundayIndex =
+    (
+      7 -
+      last.getDay()
+    )
+    %
+    7;
+
+  const end =
+    new Date(last);
+
+  end.setDate(
+    end.getDate() +
+    sundayIndex +
+    1
+  );
+
+  end.setHours(
+    0,0,0,0
+  );
+
+  return end;
 }
 
 
@@ -2816,25 +4778,42 @@ function dateKey(date) {
   const d =
     new Date(date);
 
-  const year =
+  const y =
     d.getFullYear();
 
-  const month =
-    String(d.getMonth() + 1)
-      .padStart(2,"0");
+  const m =
+    String(
+      d.getMonth() + 1
+    )
+    .padStart(
+      2,
+      "0"
+    );
 
   const day =
-    String(d.getDate())
-      .padStart(2,"0");
+    String(
+      d.getDate()
+    )
+    .padStart(
+      2,
+      "0"
+    );
 
-  return `${year}-${month}-${day}`;
+  return (
+    `${y}-${m}-${day}`
+  );
 }
 
 
 function parseDateKey(key) {
 
-  const [y,m,d] =
-    key.split("-")
+  const [
+    y,
+    m,
+    d
+  ] =
+    key
+      .split("-")
       .map(Number);
 
   return new Date(
@@ -2851,89 +4830,165 @@ function localDateTime(date) {
     new Date(date);
 
   const pad =
-    n => String(n)
-      .padStart(2,"0");
+    n =>
+      String(n)
+        .padStart(
+          2,
+          "0"
+        );
 
   return (
-    d.getFullYear() +
-    "-" +
-    pad(d.getMonth()+1) +
-    "-" +
-    pad(d.getDate()) +
-    "T" +
-    pad(d.getHours()) +
-    ":" +
-    pad(d.getMinutes())
+    d.getFullYear()
+    +
+    "-"
+    +
+    pad(
+      d.getMonth() + 1
+    )
+    +
+    "-"
+    +
+    pad(
+      d.getDate()
+    )
+    +
+    "T"
+    +
+    pad(
+      d.getHours()
+    )
+    +
+    ":"
+    +
+    pad(
+      d.getMinutes()
+    )
   );
 }
 
 
-function formatOnlyTime(date) {
+function combineDateAndTime(
+  date,
+  time
+) {
 
-  return new Date(date)
-    .toLocaleTimeString(
-      "cs-CZ",
-      {
-        hour: "2-digit",
-        minute: "2-digit"
-      }
-    );
+  const [
+    h,
+    m
+  ] =
+    time
+      .split(":")
+      .map(Number);
+
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    h,
+    m
+  );
 }
 
 
-function formatTime(value) {
+function formatTime(
+  value
+) {
 
   return new Date(value)
     .toLocaleTimeString(
       "cs-CZ",
       {
-        hour: "2-digit",
-        minute: "2-digit"
+        hour:
+          "2-digit",
+        minute:
+          "2-digit"
       }
     );
 }
 
 
-function formatHours(hours) {
+function formatOnlyTime(
+  value
+) {
 
-  const totalMinutes =
-    Math.round(hours * 60);
+  return new Date(value)
+    .toLocaleTimeString(
+      "cs-CZ",
+      {
+        hour:
+          "2-digit",
+        minute:
+          "2-digit"
+      }
+    );
+}
+
+
+function formatHours(
+  hours
+) {
+
+  const minutes =
+    Math.round(
+      hours *
+      60
+    );
 
   const h =
-    Math.floor(totalMinutes / 60);
+    Math.floor(
+      minutes /
+      60
+    );
 
   const m =
-    totalMinutes % 60;
+    minutes %
+    60;
+
 
   if (!m) {
+
     return `${h} h`;
   }
 
-  return `${h} h ${m} min`;
+
+  return (
+    `${h} h ${m} min`
+  );
 }
 
+
+/* =====================================================
+   BEZPEČNÝ TEXT
+===================================================== */
 
 function safe(value) {
 
-  return String(value ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-
-function refreshIcons() {
-
-  setTimeout(() => {
-    if (window.lucide) {
-      lucide.createIcons();
-    }
-  }, 0);
+  return String(
+    value ?? ""
+  )
+  .replaceAll(
+    "&",
+    "&amp;"
+  )
+  .replaceAll(
+    "<",
+    "&lt;"
+  )
+  .replaceAll(
+    ">",
+    "&gt;"
+  )
+  .replaceAll(
+    '"',
+    "&quot;"
+  )
+  .replaceAll(
+    "'",
+    "&#039;"
+  );
 }
 
 </script>
 
 </body>
-  </html>
+            </html>
