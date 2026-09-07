@@ -17,71 +17,226 @@
       color: #222;
     }
 
-    .app {
+    .container {
       max-width: 600px;
       margin: auto;
-      min-height: 100vh;
-      background: white;
-      padding: 20px;
+      padding: 24px 18px 50px;
     }
 
     h1 {
+      font-size: 38px;
       margin-bottom: 5px;
     }
 
     .subtitle {
       color: #777;
-      margin-top: 0;
+      font-size: 21px;
+      margin-bottom: 28px;
     }
 
     .card {
-      background: #f7f7f7;
-      border-radius: 16px;
-      padding: 18px;
-      margin-top: 20px;
+      background: white;
+      border-radius: 22px;
+      padding: 25px;
+      margin-bottom: 22px;
+    }
+
+    h2 {
+      font-size: 29px;
+      margin-top: 0;
     }
 
     button {
       width: 100%;
-      padding: 14px;
-      margin-top: 10px;
       border: 0;
-      border-radius: 12px;
-      font-size: 16px;
+      border-radius: 15px;
+      padding: 18px;
+      font-size: 20px;
+      background: #222;
+      color: white;
       cursor: pointer;
     }
 
-    .primary {
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .person {
+      padding: 10px 0;
+      font-size: 20px;
+    }
+
+    #records {
+      margin-bottom: 20px;
+    }
+
+    .record {
+      background: #f3f3f3;
+      padding: 13px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .form {
+      display: none;
+      margin-top: 20px;
+    }
+
+    select,
+    input,
+    textarea {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 17px;
+      font-family: Arial, sans-serif;
+    }
+
+    textarea {
+      min-height: 90px;
+    }
+
+    .save {
       background: #222;
-      color: white;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="app">
+<div class="container">
 
-    <h1>Péče o dítě</h1>
-    <p class="subtitle">Rodinný přehled</p>
+  <h1>Péče o dítě</h1>
+  <div class="subtitle">Rodinný přehled</div>
 
-    <div class="card">
-      <h2>Dnes</h2>
-      <p>Zatím tu nejsou žádné záznamy.</p>
-      <button class="primary">+ Přidat péči</button>
+  <div class="card">
+
+    <h2>Dnes</h2>
+
+    <div id="records">
+      Zatím tu nejsou žádné záznamy.
     </div>
 
-    <div class="card">
-      <h2>Osoby</h2>
-      <p>Máma</p>
-      <p>Táta</p>
-      <p>Babička Bezděz</p>
-      <p>Babička Jablonec</p>
-      <p>Teta 1</p>
-      <p>Teta 2</p>
+    <button id="addButton" type="button">
+      + Přidat péči
+    </button>
+
+    <div class="form" id="careForm">
+
+      <select id="person">
+        <option value="">Kdo pečoval?</option>
+        <option>Máma</option>
+        <option>Táta</option>
+        <option>Babička Bezděz</option>
+        <option>Babička Jablonec</option>
+        <option>Teta 1</option>
+        <option>Teta 2</option>
+      </select>
+
+      <input
+        id="date"
+        type="date"
+      >
+
+      <input
+        id="from"
+        type="time"
+      >
+
+      <input
+        id="to"
+        type="time"
+      >
+
+      <textarea
+        id="note"
+        placeholder="Poznámka"
+      ></textarea>
+
+      <button
+        id="saveButton"
+        class="save"
+        type="button"
+      >
+        Uložit
+      </button>
+
     </div>
 
   </div>
+
+  <div class="card">
+
+    <h2>Osoby</h2>
+
+    <div class="person">Máma</div>
+    <div class="person">Táta</div>
+    <div class="person">Babička Bezděz</div>
+    <div class="person">Babička Jablonec</div>
+    <div class="person">Teta 1</div>
+    <div class="person">Teta 2</div>
+
+  </div>
+
+</div>
+
+<script>
+
+  const addButton = document.getElementById("addButton");
+  const careForm = document.getElementById("careForm");
+  const saveButton = document.getElementById("saveButton");
+
+  addButton.addEventListener("click", function () {
+    careForm.style.display = "block";
+    addButton.style.display = "none";
+  });
+
+  saveButton.addEventListener("click", function () {
+
+    const person = document.getElementById("person").value;
+    const date = document.getElementById("date").value;
+    const from = document.getElementById("from").value;
+    const to = document.getElementById("to").value;
+    const note = document.getElementById("note").value;
+
+    if (!person) {
+      alert("Vyber, kdo pečoval.");
+      return;
+    }
+
+    const records = document.getElementById("records");
+
+    if (records.innerText.includes("Zatím tu nejsou")) {
+      records.innerHTML = "";
+    }
+
+    const record = document.createElement("div");
+    record.className = "record";
+
+    record.innerHTML =
+      "<strong>" + person + "</strong><br>" +
+      (date ? date + "<br>" : "") +
+      (from || to ? (from || "—") + " – " + (to || "—") + "<br>" : "") +
+      (note ? note : "");
+
+    records.appendChild(record);
+
+    careForm.style.display = "none";
+    addButton.style.display = "block";
+
+    document.getElementById("person").value = "";
+    document.getElementById("from").value = "";
+    document.getElementById("to").value = "";
+    document.getElementById("note").value = "";
+
+  });
+
+  document.getElementById("date").value =
+    new Date().toISOString().split("T")[0];
+
+</script>
 
 </body>
 </html>
